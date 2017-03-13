@@ -110,6 +110,10 @@ require_relative 'chess_pieces.rb'
 
 
 	end
+	def piece(location)
+		tile(location) ? tile(location).piece : nil
+
+	end
 	#to_chess_notation, takes a point on a board, and returns the chess_notation 'e8','d5' etc
 	#a1 is represented by Point(0,0), h8 is represented by Point(7,7), 'b4' is represented by Point(1,3)
 	def to_chess_notation(point)

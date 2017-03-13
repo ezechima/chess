@@ -15,18 +15,12 @@ class Chess_Piece
 		@color = color		#white or black chess piece
 		@has_moved = false
 	end
-	#update attack tiles for pieces which cannot take more than one step in a particular direction
-	#pawns, knight, king.
-	def update_attackTiles_linear
-		@attackTiles = []
-		@attack_directions.each do |attack_direction|
-			neighbor_tile = @currentTile.neighbor(attack_direction)
-			@attackTiles << neighbor_tile if can_attack?(neighbor_tile)
-				
-		end	
-		@attackTiles
 
-
+	def attackTiles_list
+		@attackTiles.map {|tile| tile.to_s}
+	end
+	def moveTiles_list
+		@moveTiles.map {|tile| tile.to_s}
 	end
 
 	def getTile
@@ -37,8 +31,7 @@ class Chess_Piece
 	end
 
 
-	def update_moveTiles
-	end
+
 	def can_attack?(tile)
 
 		return true if tile && (tile.is_empty? || tile.piece.color != self.color)
@@ -53,12 +46,27 @@ class Chess_Piece
 	def to_s
 		"#{@color} #{self.class} on #{@currentTile}"
 	end
+	#update attack tiles for pieces which cannot take more than one step in a particular direction
+	#pawns, knight, king.
+	def update_attackTiles_linear
+		@attackTiles = []
+		@attack_directions.each do |attack_direction|
+			neighbor_tile = @currentTile.neighbor(attack_direction)
+			@attackTiles << neighbor_tile if can_attack?(neighbor_tile)
+				
+		end	
+		update_moveTiles
+		@attackTiles
+
+
+	end
 	def update_attackTiles_recursive
 		@attackTiles = []
 		@attack_directions.each do |attack_direction|
 			update_attackTiles_in(attack_direction,@currentTile)
 
 		end
+		update_moveTiles
 		@attackTiles
 
 	end
@@ -145,14 +153,20 @@ class Pawn < Chess_Piece
 
 	end
 	def update_moveTiles
-		move_directions = [NORTH] if has_moved? # to change, move_directions should be updated when the pieces move method is called
+		#move_directions = [NORTH] if has_moved? # to change, move_directions should be updated when the pieces move method is called
 
-		move_directions.each do |move_direction| 
+		@move_directions.each do |move_direction| 
 			neighbor_tile = @currentTile.neighbor(move_direction)
 			if neighbor_tile.is_empty? || (neighbor_tile.color != @color)
 				@moveTiles << neighbor_tile
 			end
 		end
+		@attackTiles.each do |tile|
+			if !tile.is_empty?
+				@moveTiles = @moveTiles + [tile]
+			end
+		end
+		@moveTiles
 	end
 
 
