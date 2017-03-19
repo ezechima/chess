@@ -9,7 +9,7 @@ require_relative 'chess_pieces.rb'
 	BOARD_FILE = {"a"=>0,"b"=>1,"c"=>2,"d"=>3,"e"=>4,"f"=>5,"g"=>6,"h"=>7}
 	LOC_REGEXP = /([a-h])([1-8])/ #regular Expression representing a location on the chess board using algebraic notation.
 	attr_accessor :active_pieces, :board, :black_killed_pieces, :white_killed_pieces, :black_pieces_active, :white_pieces_active
-	attr_reader :black_attack_tiles, :white_attack_tiles
+	attr_reader :black_attack_tiles, :white_attack_tiles, :black_king, :white_king
 
 	def initialize
 		@active_pieces=[]
@@ -21,10 +21,18 @@ require_relative 'chess_pieces.rb'
 		initialize_tiles  #update tile locations
 		
 		place_pieces		#its the board's responsibility to ensure pieces are properly placed
-		@white_attack_tiles =update_attack_tiles(@white_pieces_active)
-		@black_attack_tiles = update_attack_tiles(@black_pieces_active)
+		update_all_attack_tiles
+		
+
+		@black_king = piece('e8')
+		@white_king = piece('e1')
 
 		true
+	end
+	def update_all_attack_tiles
+		@white_attack_tiles =update_attack_tiles(@white_pieces_active)
+		@black_attack_tiles = update_attack_tiles(@black_pieces_active)
+		
 	end
 	def place_pieces
 		piece_positions = [	[["2","7"],('a'..'h'),'Pawn'],
@@ -91,15 +99,30 @@ require_relative 'chess_pieces.rb'
 		found_piece_location=found_piece.get_location
 		#create a clone and test the move to see if it is valid
 		temp_board = self.clone
-		response = temp_board.move_piece(found_piece_location,destination)
+		response = temp_board.move_piece(piece_color,found_piece_location,destination)
 		if  response == true #{:move=> true, :message =>"King is under attack by"}
-			move = move_piece(found_piece_location,destination)
+			move = move_piece(piece_color,found_piece_location,destination)
 			return move
 		
 		end
-
-
 	end
+
+	def move_piece (piece_color,source_location, destination)
+		#move the piece to the required destination
+		#update attack tiles
+		#check to see if own king is under attack
+		source_tile=tile(source_location)
+		piece = source_tile.piece
+		desination_tile = tile(destination)
+		source_tile.clear
+		destination_tile.piece = piece
+		piece.has_moved = true
+		update_all_attack_tiles
+
+
+		
+	end
+
 	def kill_piece(piece)
 		index=active_pieces.find_index(piece)
 		active_pieces.delete_at(index)
@@ -130,7 +153,11 @@ require_relative 'chess_pieces.rb'
 				piece_found=true
 				temp_piece = search_piece
 				if search_piece.moveTiles_list.contains(destination)
-					return search_piece
+					if (rank || file) && (search_piece.getTile.rank == rank || search_piece.getTile.file == file)
+						return search_piece
+					else
+						return search_piece
+					end
 				end
 			end
 		end
@@ -140,9 +167,6 @@ require_relative 'chess_pieces.rb'
 			raise "#{piece} not in play"
 		end
 
-		
-	end
-	def move_piece (source, destination)
 		
 	end
 

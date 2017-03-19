@@ -5,7 +5,8 @@ class Chess_Piece
 	SOUTH = Point.new(0,-1)
 	EAST = Point.new(1,0)
 	WEST = Point.new(-1,0)
-	attr_reader :color, :has_moved, :attackTiles, :moveTiles, :name
+	attr_reader :color,  :attackTiles, :moveTiles, :name
+	attr_accessor :has_moved
 
 	#sets the color and current tile for the chess piece
 	def initialize (color, first_location)

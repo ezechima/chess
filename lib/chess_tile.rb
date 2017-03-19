@@ -30,6 +30,14 @@ class Chess_Tile
 		@board.tile(@location + direction)
 		
 	end
+	def rank
+		@str_location[1]
+	end
+	def file
+		@str_location[0]
+
+		
+	end
 	def to_s
 		@str_location
 	end

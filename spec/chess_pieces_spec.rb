@@ -46,6 +46,11 @@ describe Chess_Board do
 		it 'knows all the tiles that are under attack by each team' do
 			expect(myboard.white_attack_tiles.keys.length).to eql(8)
 		end
+		it 'has an easy pointer to the kings' do
+			expect(myboard.black_king.name).to eql("Black King e8")
+			expect(myboard.white_king.name).to eql("White King e1")
+
+		end
 
 	end
 
