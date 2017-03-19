@@ -16,6 +16,8 @@ class Chess_Tile
 		@piece
 	end
 	def piece=(piece)
+		@board.kill_piece(@piece) if @piece 
+
 		@piece = piece
 		@piece.setTile(self)
 	end

@@ -8,14 +8,15 @@ require_relative 'chess_pieces.rb'
 
 	BOARD_FILE = {"a"=>0,"b"=>1,"c"=>2,"d"=>3,"e"=>4,"f"=>5,"g"=>6,"h"=>7}
 	LOC_REGEXP = /([a-h])([1-8])/ #regular Expression representing a location on the chess board using algebraic notation.
-	attr_accessor :active_pieces, :board, :taken_pieces, :black_pieces_active, :white_pieces_active
+	attr_accessor :active_pieces, :board, :black_killed_pieces, :white_killed_pieces, :black_pieces_active, :white_pieces_active
 	attr_reader :black_attack_tiles, :white_attack_tiles
 
 	def initialize
 		@active_pieces=[]
 		@black_pieces_active = []
 		@white_pieces_active = []
-		@taken_pieces =[]
+		@black_killed_pieces =[]
+		@white_killed_pieces = []
 		@board = Array.new(8) { Array.new(8) {Chess_Tile.new(self)}}
 		initialize_tiles  #update tile locations
 		
@@ -38,7 +39,7 @@ require_relative 'chess_pieces.rb'
 			color = 'White'
 			piece[0].each do |rank|
 				piece[1].each do |file|
-					new_piece = Object.const_get(piece[2]).new(color)
+					new_piece = Object.const_get(piece[2]).new(color,file+rank)
 					tile(file+rank).piece = new_piece
 					@active_pieces << 	new_piece
 					if color=='White'
@@ -82,6 +83,69 @@ require_relative 'chess_pieces.rb'
 
 		
 	end
+
+	def move(piece_color,piece_class,destination,rank=nil, file=nil)
+		
+		#find the piece that fits this move
+		found_piece = find_piece(piece_color,piece_class,destination,rank,file)
+		found_piece_location=found_piece.get_location
+		#create a clone and test the move to see if it is valid
+		temp_board = self.clone
+		response = temp_board.move_piece(found_piece_location,destination)
+		if  response == true #{:move=> true, :message =>"King is under attack by"}
+			move = move_piece(found_piece_location,destination)
+			return move
+		
+		end
+
+
+	end
+	def kill_piece(piece)
+		index=active_pieces.find_index(piece)
+		active_pieces.delete_at(index)
+
+		if piece.color.downcase == 'white'
+			index = white_pieces_active.find_index(piece)
+			white_pieces_active.delete_at(index)
+			white_killed_pieces << piece
+		elsif piece.color.downcase == 'black'
+			index = black_pieces_active.find_index(piece)
+			black_pieces_active.delete_at(index)
+			black_killed_pieces << piece
+		end
+		piece.setTile(nil)
+				
+
+
+	end
+
+	
+	def find_piece(piece_color,piece_class,destination,rank,file) # (string,class,string location,string rank, string file)
+		piece_found = false
+		temp_piece = nil
+		
+		search_array = (piece_color.downcase == 'white'? white_pieces_active : black_pieces_active)
+		search_array.each do |search_piece|
+			if search_piece.instance_of?(piece_class)
+				piece_found=true
+				temp_piece = search_piece
+				if search_piece.moveTiles_list.contains(destination)
+					return search_piece
+				end
+			end
+		end
+		if piece_found
+			raise "#{temp_piece} cannot move to #{destination}"
+		else
+			raise "#{piece} not in play"
+		end
+
+		
+	end
+	def move_piece (source, destination)
+		
+	end
+
 
 	def each
 		y_loc = 0

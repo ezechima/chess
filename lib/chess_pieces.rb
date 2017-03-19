@@ -5,15 +5,16 @@ class Chess_Piece
 	SOUTH = Point.new(0,-1)
 	EAST = Point.new(1,0)
 	WEST = Point.new(-1,0)
-	attr_reader :color, :has_moved, :attackTiles, :moveTiles
+	attr_reader :color, :has_moved, :attackTiles, :moveTiles, :name
 
 	#sets the color and current tile for the chess piece
-	def initialize (color)
+	def initialize (color, first_location)
 		@attackTiles = []  #Tiles the piece is attacking
 		@currentTile = nil  #Tile the piece is currently on
 		@moveTiles = []	#Tiles the piece can move to, equal to attack tile except for pawns
 		@color = color		#white or black chess piece
 		@has_moved = false
+		@name = "#{@color} #{self.class} #{first_location}"
 	end
 
 	def attackTiles_list
@@ -25,6 +26,10 @@ class Chess_Piece
 
 	def getTile
 		@currentTile
+	end
+	def get_location
+		@currentTile.to_s
+
 	end
 	def setTile(tile)
 		@currentTile = tile
@@ -87,7 +92,7 @@ class Chess_Piece
 end
 
 class Queen < Chess_Piece
-	def initialize (color)
+	def initialize (color, first_location)
 		super
 		@attack_directions = [NORTH, WEST, EAST, SOUTH,NORTH + EAST, NORTH + WEST, SOUTH+EAST, SOUTH+ WEST]
 		@move_directions = @attack_directions
@@ -104,7 +109,7 @@ class Queen < Chess_Piece
 end
 
 class King < Chess_Piece
-	def initialize (color)
+	def initialize (color, first_location)
 		super
 		@attack_directions = [NORTH, WEST, EAST, SOUTH,NORTH + EAST, NORTH + WEST, SOUTH+EAST, SOUTH+ WEST]
 		@move_directions = @attack_directions
@@ -120,7 +125,7 @@ class King < Chess_Piece
 end
 
 class Rook < Chess_Piece
-	def initialize (color)
+	def initialize (color, first_location)
 		super
 		@attack_directions = [NORTH, WEST, EAST, SOUTH]
 		@move_directions = @attack_directions
@@ -135,9 +140,45 @@ class Rook < Chess_Piece
 
 end
 
+
+
+class Bishop < Chess_Piece
+	def initialize(color, first_location)
+		super
+		@attack_directions = [NORTH + EAST, NORTH + WEST, SOUTH+EAST, SOUTH+ WEST]
+		@move_directions = @attack_directions
+	end
+	def update_attackTiles
+		update_attackTiles_recursive
+
+	end
+	def update_moveTiles
+		@moveTiles = @attackTiles
+	end
+end
+class Knight < Chess_Piece
+	def initialize(color, first_location)
+		super
+		knight_moves = [[1,2],[1,-2],[-1,2],[-1,-2],[2,1],[2,-1],[-2,1],[-2,-1]]
+		@attack_directions = knight_moves.map do |knight_move|
+			x,y,z = knight_move
+			Point.new(x.to_i,y.to_i,z.to_i)
+		end
+		@move_directions = @attack_directions
+	end
+	def update_attackTiles
+		update_attackTiles_linear
+	
+
+	end
+	def update_moveTiles
+		@moveTiles = @attackTiles
+	end
+
+end
 class Pawn < Chess_Piece
 	attr_accessor :attack_directions
-	def initialize (color)
+	def initialize (color, first_location)
 		super
 		if color.downcase == 'white'
 			@attack_directions = [NORTH + EAST, NORTH + WEST]
@@ -170,41 +211,6 @@ class Pawn < Chess_Piece
 	end
 
 
-
-end
-
-class Bishop < Chess_Piece
-	def initialize(color)
-		super
-		@attack_directions = [NORTH + EAST, NORTH + WEST, SOUTH+EAST, SOUTH+ WEST]
-		@move_directions = @attack_directions
-	end
-	def update_attackTiles
-		update_attackTiles_recursive
-
-	end
-	def update_moveTiles
-		@moveTiles = @attackTiles
-	end
-end
-class Knight < Chess_Piece
-	def initialize(color)
-		super
-		knight_moves = [[1,2],[1,-2],[-1,2],[-1,-2],[2,1],[2,-1],[-2,1],[-2,-1]]
-		@attack_directions = knight_moves.map do |knight_move|
-			x,y,z = knight_move
-			Point.new(x.to_i,y.to_i,z.to_i)
-		end
-		@move_directions = @attack_directions
-	end
-	def update_attackTiles
-		update_attackTiles_linear
-	
-
-	end
-	def update_moveTiles
-		@moveTiles = @attackTiles
-	end
 
 end
 

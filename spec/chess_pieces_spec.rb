@@ -47,11 +47,6 @@ describe Chess_Board do
 			expect(myboard.white_attack_tiles.keys.length).to eql(8)
 		end
 
-		it 'knows which piece has been killed' do
-			expect(myboard.taken_pieces).to be 
-			expect(myboard.taken_pieces.length).to eql(0)
-
-		end
 	end
 
 	describe 'chess_pieces' do
@@ -83,9 +78,24 @@ describe Chess_Board do
 
 	end
 	describe '#move' do
+		before do
+			myboard.kill_piece(myboard.piece('h1'))
+		end
+
+		it 'knows which piece has been killed' do
+			expect(myboard.piece('h1').name).to eql("White Rook h1")
+			expect(myboard.white_killed_pieces).to be 
+			expect(myboard.white_killed_pieces.length).to eql(1)
+		end
+
 		it 'prevents a piece from moving if it will place the king under check'
+		it 'updates the hasmoved? property of a piece'
 		it 'prevents a piece from going over another piece'
 		it 'kills a competing piece when hit'
+		end
+
+	describe '#check' do
+		it 'knows a checkmate condition'
 	end
 end
 
