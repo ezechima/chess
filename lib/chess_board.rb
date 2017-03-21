@@ -5,6 +5,8 @@ class Chess_Board
 require_relative 'point.rb'
 require_relative 'chess_tile.rb'
 require_relative 'chess_pieces.rb'
+require_relative 'render_chess_board.rb'
+include Render_Chess_Board
 
 	BOARD_FILE = {"a"=>0,"b"=>1,"c"=>2,"d"=>3,"e"=>4,"f"=>5,"g"=>6,"h"=>7}
 	LOC_REGEXP = /([a-h])([1-8])/ #regular Expression representing a location on the chess board using algebraic notation.
@@ -29,11 +31,15 @@ require_relative 'chess_pieces.rb'
 
 		true
 	end
+
+	#the game always has information about which piece is attacking where
+	#after every move, this method should be called to refresh
 	def update_all_attack_tiles
 		@white_attack_tiles =update_attack_tiles(@white_pieces_active)
 		@black_attack_tiles = update_attack_tiles(@black_pieces_active)
 		
 	end
+
 	def place_pieces
 		piece_positions = [	[["2","7"],('a'..'h'),'Pawn'],
 							[["1","8"],["a","h"],'Rook'],
