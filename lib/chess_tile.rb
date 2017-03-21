@@ -42,6 +42,10 @@ class Chess_Tile
 		@str_location
 	end
 
+	def inspect
+		@str_location
+	end
+
 
 
 

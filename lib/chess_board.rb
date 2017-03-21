@@ -98,7 +98,9 @@ require_relative 'chess_pieces.rb'
 		found_piece = find_piece(piece_color,piece_class,destination,rank,file)
 		found_piece_location=found_piece.get_location
 		#create a clone and test the move to see if it is valid
-		temp_board = self.clone
+		temp_board = Marshal.load(Marshal.dump(self))
+
+
 		response = temp_board.move_piece(piece_color,found_piece_location,destination)
 		if  response == true #{:move=> true, :message =>"King is under attack by"}
 			move = move_piece(piece_color,found_piece_location,destination)
@@ -111,17 +113,34 @@ require_relative 'chess_pieces.rb'
 		#move the piece to the required destination
 		#update attack tiles
 		#check to see if own king is under attack
-		source_tile=tile(source_location)
+		source_tile = tile(source_location)
 		piece = source_tile.piece
-		desination_tile = tile(destination)
+
+		destination_tile = tile(destination)
 		source_tile.clear
 		destination_tile.piece = piece
 		piece.has_moved = true
 		update_all_attack_tiles
-
-
+		piece_color.downcase == 'white' ? king_check?(@white_king,@black_attack_tiles) : king_check?(@black_king,@white_attack_tiles)
+		true
 		
 	end
+
+	def king_check? (king,list_of_tiles)
+		if king.instance_of?(String)
+			king_tile= king
+		else
+			king_tile = king.getTile.to_s
+		end
+		temp = list_of_tiles[king_tile]
+		if temp == nil
+			return false
+		else
+			raise "#{king} is under attack by #{temp}"
+		end
+		
+	end
+
 
 	def kill_piece(piece)
 		index=active_pieces.find_index(piece)
@@ -152,7 +171,7 @@ require_relative 'chess_pieces.rb'
 			if search_piece.instance_of?(piece_class)
 				piece_found=true
 				temp_piece = search_piece
-				if search_piece.moveTiles_list.contains(destination)
+				if search_piece.moveTiles_list.include?(destination)
 					if (rank || file) && (search_piece.getTile.rank == rank || search_piece.getTile.file == file)
 						return search_piece
 					else
@@ -166,7 +185,7 @@ require_relative 'chess_pieces.rb'
 		else
 			raise "#{piece} not in play"
 		end
-
+		false
 		
 	end
 
@@ -221,6 +240,14 @@ require_relative 'chess_pieces.rb'
 		end
 
 	end
+	def to_s
+		 "ChessBoard #{__id__}"
+	end
+	def inspect
+
+		"ChessBoard #{__id__}"
+	end
+
 
 
 end

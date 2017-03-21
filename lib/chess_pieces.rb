@@ -52,6 +52,10 @@ class Chess_Piece
 	def to_s
 		"#{@color} #{self.class} on #{@currentTile}"
 	end
+	def inspect
+		"#{@color} #{self.class} on #{@currentTile} AttackTiles <#{@attackTiles}> moveTiles < #{@moveTiles}>"
+
+	end
 	#update attack tiles for pieces which cannot take more than one step in a particular direction
 	#pawns, knight, king.
 	def update_attackTiles_linear
@@ -195,11 +199,11 @@ class Pawn < Chess_Piece
 
 	end
 	def update_moveTiles
-		#move_directions = [NORTH] if has_moved? # to change, move_directions should be updated when the pieces move method is called
-
+		@move_directions = [NORTH] if has_moved # to change, move_directions should be updated when the pieces move method is called
+		@moveTiles=[]
 		@move_directions.each do |move_direction| 
 			neighbor_tile = @currentTile.neighbor(move_direction)
-			if neighbor_tile.is_empty? || (neighbor_tile.color != @color)
+			if neighbor_tile.is_empty? || (neighbor_tile.piece.color != @color)
 				@moveTiles << neighbor_tile
 			end
 		end

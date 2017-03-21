@@ -78,27 +78,91 @@ describe Chess_Board do
 				expect(myboard.tile("d2").piece.getTile.str_location).to eql("d2")
 				expect(myboard.tile("f8").piece.getTile.str_location).to eql("f8")
 			end
+			it 'prevents a piece from going over another piece' do
+				expect {myboard.move('White',Bishop,'a3')}.to raise_error("White Bishop on f1 cannot move to a3")
+
+			end
 
 		end
 
 	end
 	describe '#move' do
+
+		it 'allows legal moves' do
+			expect(myboard.move('White', Pawn ,'e4')).to be_truthy
+			expect(myboard.move('Black', Pawn,'e5')).to be_truthy
+			expect(myboard.move('White',Bishop,'c4')).to be_truthy
+			expect(myboard.move('Black', Queen,'g5')).to be_truthy
+			expect(myboard.move('White',Knight,'f3')).to be_truthy
+			expect(myboard.move('Black', Queen,'g6')).to be_truthy
+			expect(myboard.move('White',Knight,'e5')).to be_truthy
+			expect(myboard.move('Black', Knight,'c6')).to be_truthy
+			expect(myboard.move('White',Knight,'g6')).to be_truthy
+			expect(myboard.move('Black', Pawn,'b5')).to be_truthy
+			expect(myboard.move('White',Knight,'h8')).to be_truthy
+			expect(myboard.move('Black', Bishop,'b7')).to be_truthy
+			expect(myboard.move('White',Knight,'f7')).to be_truthy
+			expect(myboard.move('Black', Knight,'d8')).to be_truthy
+			expect(myboard.move('White',Knight,'h6')).to be_truthy
+			expect(myboard.move('Black', King,'e7')).to be_truthy
+			expect(myboard.move('White',Knight,'f5')).to be_truthy
+		
+			
+		end
+	end
+
+	describe 'game_play' do
+		let(:black_queen) do
+			myboard.piece('d8')
+		end
+
 		before do
-			myboard.kill_piece(myboard.piece('h1'))
+
+			myboard.move('White', Pawn ,'e4')
+			myboard.move('Black', Pawn,'e5')
+			myboard.move('White',Bishop,'c4')
+			myboard.move('Black', Queen,'g5')
+			myboard.move('White',Knight,'f3')
+			myboard.move('Black', Queen,'g6')
+			myboard.move('White',Knight,'e5')
+		
+			myboard.move('Black', Knight,'c6')
+			myboard.move('White',Knight,'g6')
+			myboard.move('Black', Pawn,'b5')
+			myboard.move('White',Knight,'h8')
+			myboard.move('Black', Bishop,'b7')
+			myboard.move('White',Knight,'f7')
+			myboard.move('Black', Knight,'d8')
+			myboard.move('White',Knight,'h6')
+			myboard.move('Black', King,'e7')
+			myboard.move('White',Knight,'f5')
+		
+
 		end
 
-		it 'knows which piece has been killed' do
-			expect(myboard.piece('h1').name).to eql("White Rook h1")
-			expect(myboard.white_killed_pieces).to be 
-			expect(myboard.white_killed_pieces.length).to eql(1)
+		it 'knows how many pieces have been killed' do
+			
+			expect(myboard.black_killed_pieces.length).to eql(4)
+			
+
 		end
 
-		it 'prevents a piece from moving if it will place the king under check'
-		it 'updates the hasmoved? property of a piece'
-		it 'prevents a piece from going over another piece'
-		it 'kills a competing piece when hit'
+		it 'knows which pieces have been killed' do
+			
+			expect(myboard.black_killed_pieces).to include(black_queen)
+
+			
 		end
 
+
+
+		it 'prevents a piece from moving if it will place the king under check' do
+			expect {myboard.move('Black',King,'e6')}.to raise_error("Black King on e6 is under attack by White Bishop on c4")
+		end
+
+
+
+	end		
 	describe '#check' do
 		it 'knows a checkmate condition'
 	end
