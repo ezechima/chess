@@ -33,6 +33,7 @@ module Render_Chess_Board
 
 
 		rank = 8
+		render_letters
 
 		8.times do 
 			rank -=1
@@ -40,6 +41,7 @@ module Render_Chess_Board
 			render_ranks(rank,board)
 
 		end
+		render_letters
 
 		true
 
@@ -61,6 +63,7 @@ module Render_Chess_Board
 
 	end
 	def render_pad_spacing(files_on_rank)
+		print "  "
 		files_on_rank.each do |file|
 			tile_shade_str = TILE_BACKGROUND[tile_background_color(file)]
 			print "\033[#{tile_shade_str}m#{' '*@tile_width}\033[0m"
@@ -70,6 +73,7 @@ module Render_Chess_Board
 			
 	end
 	def render_pieces(files_on_rank,board)
+		print "#{files_on_rank[0].y+1} "
 
 		files_on_rank.each do |file|
 			piece = board.piece(file)
@@ -81,6 +85,17 @@ module Render_Chess_Board
 			print "\033[#{foreground_str};#{background_str}m#{' '*@left_pad}#{piece_str}#{' '*@right_pad}\033[0m"
 
 
+		end
+		print " #{files_on_rank[0].y+1} "
+		puts ""
+
+		
+	end
+	def render_letters
+		
+		print "  "
+		"a".upto("h") do |letter|
+			print "#{' '*@left_pad}#{letter}#{' '*@right_pad}"
 		end
 		puts ""
 
