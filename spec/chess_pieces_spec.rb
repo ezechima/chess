@@ -151,12 +151,7 @@ describe Chess_Board do
 
 		end
 
-		it 'knows which pieces have been killed' do
-			
-			#expect(myboard.black_killed_pieces).to include(black_queen)
 
-			
-		end
 
 
 
@@ -167,8 +162,8 @@ describe Chess_Board do
 
 	
 		it 'knows a checkmate condition' do
-			#expect(myboard.checkmate?('black')).to be_truthy
-			#expect(myboard.checkmate?('white')).to be_falsey
+			expect(myboard.checkmate?('black')).to be_truthy
+			expect(myboard.checkmate?('white')).to be_falsey
 		end
 	end
 end
