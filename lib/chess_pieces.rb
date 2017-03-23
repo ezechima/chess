@@ -88,7 +88,8 @@ class Chess_Piece
 		neighbor_tile = currentTile.neighbor(attack_direction)
 		if neighbor_tile && can_attack?(neighbor_tile)
 			@attackTiles << neighbor_tile
-			update_attackTiles_in(attack_direction,neighbor_tile)
+
+			update_attackTiles_in(attack_direction,neighbor_tile) unless neighbor_tile.piece
 		end
 
 	end
@@ -198,12 +199,16 @@ class Pawn < Chess_Piece
 		update_attackTiles_linear
 
 	end
+	def has_moved=(bool)
+		@has_moved = bool
+		@move_directions = [@move_directions[0]]
+	end
 	def update_moveTiles
-		@move_directions = [NORTH] if has_moved # to change, move_directions should be updated when the pieces move method is called
+		#@move_directions = [@move_directions[0]] if has_moved # to change, move_directions should be updated when the pieces move method is called
 		@moveTiles=[]
 		@move_directions.each do |move_direction| 
 			neighbor_tile = @currentTile.neighbor(move_direction)
-			if neighbor_tile.is_empty? || (neighbor_tile.piece.color != @color)
+			if neighbor_tile.is_empty? 
 				@moveTiles << neighbor_tile
 			end
 		end

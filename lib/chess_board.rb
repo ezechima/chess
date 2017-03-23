@@ -11,7 +11,7 @@ include Render_Chess_Board
 	BOARD_FILE = {"a"=>0,"b"=>1,"c"=>2,"d"=>3,"e"=>4,"f"=>5,"g"=>6,"h"=>7}
 	LOC_REGEXP = /([a-h])([1-8])/ #regular Expression representing a location on the chess board using algebraic notation.
 	attr_accessor :active_pieces, :board, :black_killed_pieces, :white_killed_pieces, :black_pieces_active, :white_pieces_active
-	attr_reader :black_attack_tiles, :white_attack_tiles, :black_king, :white_king
+	attr_reader :black_attack_tiles, :white_attack_tiles, :black_king, :white_king, :active_pieces_by_color, :killed_pieces_by_color
 
 	def initialize
 		@active_pieces=[]
@@ -19,6 +19,8 @@ include Render_Chess_Board
 		@white_pieces_active = []
 		@black_killed_pieces =[]
 		@white_killed_pieces = []
+		@active_pieces_by_color = {'white' => @white_pieces_active, 'black' => @black_pieces_active}
+		@killed_pieces_by_color = {'white' => @white_killed_pieces, 'black' => @black_killed_pieces}
 		@board = Array.new(8) { Array.new(8) {Chess_Tile.new(self)}}
 		initialize_tiles  #update tile locations
 		
@@ -32,6 +34,16 @@ include Render_Chess_Board
 		true
 	end
 
+	def initialize_tiles
+		each do |tile,point|
+			tile.location = point
+			tile.str_location = to_chess_notation(point)
+			#tile.board = self
+		end
+		true
+
+		
+	end
 	#the game always has information about which piece is attacking where
 	#after every move, this method should be called to refresh
 	def update_all_attack_tiles
@@ -77,7 +89,7 @@ include Render_Chess_Board
 		pieces_active.each do |piece|
 			piece_attack_tiles = piece.update_attackTiles
 			piece_attack_tiles.each do |tile|
-				attack_tiles[tile.to_s] =piece.to_s
+				attack_tiles[tile.to_s] =piece  #remooved .to_s
 			end
 
 		
@@ -86,17 +98,27 @@ include Render_Chess_Board
 
 		
 	end
-
-	def initialize_tiles
-		each do |tile,point|
-			tile.location = point
-			tile.str_location = to_chess_notation(point)
-			#tile.board = self
+	#checks if 
+	#and finding out if the king is still under check
+	def checkmate? (piece_color)
+		temp_board = Marshal.load(Marshal.dump(self))
+		search_array = temp_board.active_pieces_by_color[piece_color.downcase]
+		search_array.each do |piece|
+			piece.moveTiles_list.each do |tile_location|
+				begin
+					move = temp_board.move(piece.color,piece.class,tile_location,tile_location[1],tile_location[0])
+				rescue
+				end
+				if move
+					puts "Piece is #{piece}, destination is #{tile_location}"
+					return false
+				end
+			end
 		end
 		true
-
-		
 	end
+
+
 
 	def move(piece_color,piece_class,destination,rank=nil, file=nil)
 		
@@ -131,7 +153,8 @@ include Render_Chess_Board
 		true
 		
 	end
-
+	#checks if the king's position is under attack
+	#It can also be used to check if a position is under attack by an opposing piece
 	def king_check? (king,list_of_tiles)
 		if king.instance_of?(String)
 			king_tile= king
@@ -151,16 +174,13 @@ include Render_Chess_Board
 	def kill_piece(piece)
 		index=active_pieces.find_index(piece)
 		active_pieces.delete_at(index)
+		piece_color = piece.color.downcase
+		active_piece_array = active_pieces_by_color[piece_color]
 
-		if piece.color.downcase == 'white'
-			index = white_pieces_active.find_index(piece)
-			white_pieces_active.delete_at(index)
-			white_killed_pieces << piece
-		elsif piece.color.downcase == 'black'
-			index = black_pieces_active.find_index(piece)
-			black_pieces_active.delete_at(index)
-			black_killed_pieces << piece
-		end
+		index = active_piece_array.find_index(piece)
+		active_piece_array.delete_at(index)
+		killed_pieces_by_color[piece_color] << piece
+
 		piece.setTile(nil)
 				
 
@@ -172,7 +192,7 @@ include Render_Chess_Board
 		piece_found = false
 		temp_piece = nil
 		
-		search_array = (piece_color.downcase == 'white'? white_pieces_active : black_pieces_active)
+		search_array = active_pieces_by_color[piece_color.downcase] 
 		search_array.each do |search_piece|
 			if search_piece.instance_of?(piece_class)
 				piece_found=true
@@ -180,7 +200,7 @@ include Render_Chess_Board
 				if search_piece.moveTiles_list.include?(destination)
 					if (rank || file) && (search_piece.getTile.rank == rank || search_piece.getTile.file == file)
 						return search_piece
-					else
+					elsif !(rank || file)
 						return search_piece
 					end
 				end

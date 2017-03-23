@@ -1,4 +1,5 @@
 
+	def execs(myboard)
 			myboard.move('White', Pawn ,'e4')
 			myboard.move('Black', Pawn,'e5')
 			myboard.move('White',Bishop,'c4')
@@ -14,5 +15,13 @@
 			myboard.move('Black', Bishop,'b7')
 			myboard.move('White',Knight,'f7')
 			myboard.move('Black', Knight,'d8')
-			myboard.move('White',Knight,'h6')
-			myboard.move('Black', King,'e7')
+			myboard.move('White',Knight,'g5')
+			myboard.move('Black', Bishop,'e4')
+			myboard.move('White',Queen,'h5')
+			myboard.move('Black', Knight,'f7')
+			myboard.move('White',Queen,'f7')
+			myboard.move('Black', King,'d8')
+			myboard.move('White',Queen,'f8')
+		
+
+end

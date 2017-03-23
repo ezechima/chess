@@ -133,16 +133,20 @@ describe Chess_Board do
 			myboard.move('Black', Bishop,'b7')
 			myboard.move('White',Knight,'f7')
 			myboard.move('Black', Knight,'d8')
-			myboard.move('White',Knight,'h6')
-			myboard.move('Black', King,'e7')
-			myboard.move('White',Knight,'f5')
+			myboard.move('White',Knight,'g5')
+			myboard.move('Black', Bishop,'e4')
+			myboard.move('White',Queen,'h5')
+			myboard.move('Black', Knight,'f7')
+			myboard.move('White',Queen,'f7')
+			myboard.move('Black', King,'d8')
+			myboard.move('White',Queen,'f8')
 		
 
 		end
 
 		it 'knows how many pieces have been killed' do
 			
-			expect(myboard.black_killed_pieces.length).to eql(4)
+			expect(myboard.black_killed_pieces.length).to eql(6)
 			
 
 		end
@@ -157,14 +161,15 @@ describe Chess_Board do
 
 
 		it 'prevents a piece from moving if it will place the king under check' do
-			expect {myboard.move('Black',King,'e6')}.to raise_error("Black King on e6 is under attack by White Bishop on c4")
+			expect {myboard.move('Black',King,'e8')}.to raise_error("Black King on e8 is under attack by White Queen on f8")
 		end
 
 
-
-	end		
-	describe '#check' do
-		it 'knows a checkmate condition'
+	
+		it 'knows a checkmate condition' do
+			#expect(myboard.checkmate?('black')).to be_truthy
+			#expect(myboard.checkmate?('white')).to be_falsey
+		end
 	end
 end
 
