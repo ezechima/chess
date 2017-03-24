@@ -54,6 +54,8 @@ end
 
 class Chess_Play
 	require_relative 'chess_board.rb'
+	require_relative 'save_load.rb'
+	include Save_Load
 	MOVE_EXPR = /^([KQRBN]){0,1}([a-h])?([1-8])?(([a-h]{1})([1-8]{1}))$/ 
 	PIECE_CLASSES = {:K => King, :Q => Queen, :R => Rook, :B => Bishop, :N => Knight, :P =>Pawn}
 	attr_accessor :current_player_index
@@ -65,14 +67,16 @@ class Chess_Play
 		@black_player = Chess_Player.new("Black")
 		@players = [@white_player,@black_player]
 		@current_player_index = 0
+		@no_win = true
+		@exit = false
 		start
 
 	end
 
 	def start
-		no_win = true
+		
 		render_board
-		while (no_win)
+		while (@no_win && !@exit)
 			player = @players[@current_player_index]
 				
 			begin
@@ -93,14 +97,38 @@ class Chess_Play
 	end
 	def process_directive(input,player)
 		directive = MOVE_EXPR.match(input)
-		raise "This is an invalid input" if directive == nil
-		piece_class = directive[1] || "P"
-		piece_class_str = PIECE_CLASSES[piece_class.to_sym]
-		destination = directive[4] 
-		source_rank = directive[3]
-		source_file = directive [2]
-		@active_board.move(player.player_color,piece_class_str,destination,source_rank,source_file)
+		if directive != nil
+			piece_class = directive[1] || "P"
+			piece_class_str = PIECE_CLASSES[piece_class.to_sym]
+			destination = directive[4] 
+			source_rank = directive[3]
+			source_file = directive [2]
+			@active_board.move(player.player_color,piece_class_str,destination,source_rank,source_file)
+		elsif input.to_s.downcase == "undo"
+		elsif input.to_s.downcase == "save"
+			save_game([@active_board,@current_player_index])
+			render_board
+			raise "Game Saved"  # done so as to give the current player an opportunity to make a valid move or quit.
+		elsif input.to_s.downcase == "exit"
+			exit_game
 
+		else
+			raise "This is an invalid input"
+		end
+
+
+		
+	end
+	def exit_game
+		@exit = true
+		puts "Do you want to save this game before exiting, y/n"
+		response = gets.chomp
+		if response[0] == "y"
+			save_game([@active_board,@current_player_index])
+			render_board
+			puts "Game Saved"  # done so as to give the current player an opportunity to make a valid move or quit.
+			
+		end
 		
 	end
 	def render_board(board=nil)
