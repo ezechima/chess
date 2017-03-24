@@ -1,3 +1,16 @@
+=begin
+Next Steps.. 
+Add save capability in order to continue with the right player
+Add Castle functionality
+Add enpassant Capture
+Add random AI Play
+
+
+
+=end
+
+
+
 class Chess_Player
 	attr_accessor :player_name, :player_color
 
@@ -43,6 +56,7 @@ class Chess_Play
 	require_relative 'chess_board.rb'
 	MOVE_EXPR = /^([KQRBN]){0,1}([a-h])?([1-8])?(([a-h]{1})([1-8]{1}))$/ 
 	PIECE_CLASSES = {:K => King, :Q => Queen, :R => Rook, :B => Bishop, :N => Knight, :P =>Pawn}
+	attr_accessor :current_player_index
 
 	def initialize
 		@active_board = Chess_Board.new
@@ -50,6 +64,7 @@ class Chess_Play
 		@white_player = Chess_Player.new("White")
 		@black_player = Chess_Player.new("Black")
 		@players = [@white_player,@black_player]
+		@current_player_index = 0
 		start
 
 	end
@@ -58,21 +73,21 @@ class Chess_Play
 		no_win = true
 		render_board
 		while (no_win)
-			@players.each do |player|
+			player = @players[@current_player_index]
 				
-				begin
-					directive = player.play
-					
-					process_directive(directive,player)
+			begin
+				directive = player.play
+				
+				process_directive(directive,player)
 
 
-				rescue Exception => e
-					puts e.message
+			rescue Exception => e
+				puts e.message
 
-					redo
-				end
-				render_board
+				redo
 			end
+			render_board
+			switch_player
 		end
 		
 	end
@@ -92,26 +107,17 @@ class Chess_Play
 		system "clear"
 		@active_board.render_board(@active_board)
 	end
-
+	def switch_player
+		@current_player_index = (@current_player_index == 0) ? 1 : 0
+		
+	end
 
 
 
 	Chess_Play.new
 end
 
-=begin
 
-Load Game Board
-initialize player classes
-monitor for exceptions
-receive input from players play method
-call board play method
-catch exception
-put exception and retry
-if succesful loop
-
-make save game protocol
-=end
 
 
 
