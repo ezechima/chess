@@ -20,7 +20,7 @@ module Save_Load
 	end
 	def load_game
 		puts "select the number you would like to load?"
-		saved_files = listsavedgames('saved_games')
+		saved_files = list_saved_games('saved_games')
 		response = gets.chomp.to_i
 		game = YAML::load(File.read(File.join('saved_games',saved_files[response].to_s)))
 

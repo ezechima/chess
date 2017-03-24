@@ -65,10 +65,11 @@ class Chess_Play
 		@move_array = []
 		@white_player = Chess_Player.new("White")
 		@black_player = Chess_Player.new("Black")
-		@players = [@white_player,@black_player]
-		@current_player_index = 0
+		
+		@current_player = @white_player
 		@no_win = true
 		@exit = false
+		#@game_state = [@active_board,@current_player,@players]	
 		start
 
 	end
@@ -77,7 +78,7 @@ class Chess_Play
 		
 		render_board
 		while (@no_win && !@exit)
-			player = @players[@current_player_index]
+			player = @current_player
 				
 			begin
 				directive = player.play
@@ -106,9 +107,21 @@ class Chess_Play
 			@active_board.move(player.player_color,piece_class_str,destination,source_rank,source_file)
 		elsif input.to_s.downcase == "undo"
 		elsif input.to_s.downcase == "save"
-			save_game([@active_board,@current_player_index])
+			save_game([@active_board,@current_player,@white_player,@black_player])
+			
 			render_board
 			raise "Game Saved"  # done so as to give the current player an opportunity to make a valid move or quit.
+		elsif input.to_s.downcase == "load"
+			exit_game
+			@exit = false
+			game_state = load_game
+			@active_board = game_state[0]
+			@current_player = game_state[1]
+			
+			@white_player = game_state[2]
+			@black_player = game_state[3]
+			render_board
+			raise "Game Loaded"
 		elsif input.to_s.downcase == "exit"
 			exit_game
 
@@ -124,10 +137,10 @@ class Chess_Play
 		puts "Do you want to save this game before exiting, y/n"
 		response = gets.chomp
 		if response[0] == "y"
-			save_game([@active_board,@current_player_index])
+			save_game([@active_board,@current_player,@players])
 			render_board
 			puts "Game Saved"  # done so as to give the current player an opportunity to make a valid move or quit.
-			
+
 		end
 		
 	end
@@ -136,7 +149,7 @@ class Chess_Play
 		@active_board.render_board(@active_board)
 	end
 	def switch_player
-		@current_player_index = (@current_player_index == 0) ? 1 : 0
+		@current_player= (@current_player == @white_player) ? @black_player : @white_player
 		
 	end
 
