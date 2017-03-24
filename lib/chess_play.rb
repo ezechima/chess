@@ -4,6 +4,7 @@ Next Steps..
 Add Castle functionality
 Add enpassant Capture
 Add random AI Play
+clean up inputs
 
 
 
@@ -69,7 +70,7 @@ class Chess_Play
 		@current_player = @white_player
 		@no_win = true
 		@exit = false
-		#@game_state = [@active_board,@current_player,@players]	
+		
 		start
 
 	end
@@ -94,6 +95,7 @@ class Chess_Play
 			render_board
 			switch_player
 		end
+	end
 		
 	def process_directive(input,player)
 		directive = MOVE_EXPR.match(input)
@@ -106,7 +108,7 @@ class Chess_Play
 			@active_board.move(player.player_color,piece_class_str,destination,source_rank,source_file)
 		elsif input.to_s.downcase == "undo"
 		elsif input.to_s.downcase == "save"
-			save_game([@active_board,@current_player,@white_player,@black_player])
+			save_game(get_game_state)
 			
 			render_board
 			raise "Game Saved"  # done so as to give the current player an opportunity to make a valid move or quit.
@@ -114,11 +116,7 @@ class Chess_Play
 			exit_game
 			@exit = false
 			game_state = load_game
-			@active_board = game_state[0]
-			@current_player = game_state[1]
-			
-			@white_player = game_state[2]
-			@black_player = game_state[3]
+			load_game_state(game_state)
 			render_board
 			raise "Game Loaded"
 		elsif input.to_s.downcase == "exit"
@@ -136,13 +134,23 @@ class Chess_Play
 		puts "Do you want to save this game before exiting, y/n"
 		response = gets.chomp
 		if response[0] == "y"
-			save_game([@active_board,@current_player,@players])
+			save_game(get_game_state)
 			render_board
 			puts "Game Saved"  # done so as to give the current player an opportunity to make a valid move or quit.
 
 		end
 		
 	end
+	def get_game_state
+		[@active_board,@current_player,@white_player,@black_player]
+	end
+	def load_game_state (game_state)
+		@active_board = game_state[0]
+		@current_player = game_state[1]
+		@white_player = game_state[2]
+		@black_player = game_state[3]
+	end
+
 	def render_board(board=nil)
 		system "clear"
 		@active_board.render_board(@active_board)
