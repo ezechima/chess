@@ -1,6 +1,6 @@
 =begin
 Next Steps.. 
-Add save capability in order to continue with the right player
+
 Add Castle functionality
 Add enpassant Capture
 Add random AI Play
@@ -95,7 +95,6 @@ class Chess_Play
 			switch_player
 		end
 		
-	end
 	def process_directive(input,player)
 		directive = MOVE_EXPR.match(input)
 		if directive != nil
