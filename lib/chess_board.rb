@@ -30,6 +30,8 @@ include Render_Chess_Board
 
 		@black_king = piece('e8')
 		@white_king = piece('e1')
+		#Castle variables is used to store a hash of kings and rooks
+		@castle_variables = {'white' => {'king' => @white_king,'rook_west' => piece('a1'),'rook_east' => piece('h1'),'under_attack_by' =>@black_attack_tiles} , 'black' => {'king' => @black_king,'rook_west' => piece('a8'),'rook_east' => piece('h8'), 'under_attack_by' => @white_attack_tiles}}
 
 		true
 	end
@@ -169,8 +171,54 @@ include Render_Chess_Board
 		end
 		
 	end
+	#method to call castle, color is a string of the piece and rook_side is a string telling which rook is moving  could either be rook_east or rook_west
+	def castle(color,rook_side)
+		direction = rook_side_direction(rook_side)
+		rook = @castle_variables[color][rook_side]
+		king = @castle_variables[color]['king']
+		king_tile = king.getTile
+		rook_destination_tile = king_tile.neighbor(direction)
+		danger_tiles = @castle_variables[color]['under_attack_by']
+		check_if_moved(king,rook)
+		check_rook_path(rook, rook_destination_tile)
+		check_king_path(king_tile, direction,danger_tiles)
+		move_piece(color,king_tile.to_s,king_tile.neighbor(direction*2)	.to_s)					#move king to the side of the rook
+		move_piece(color,rook.getTile.to_s,rook_destination_tile.to_s)				#move_rook_to the side of the king
+		
 
 
+	end
+	def rook_side_direction (rook_side)
+		rook_side == 'rook_west' ? Chess_Tile::WEST : Chess_Tile::EAST
+
+	end
+	#used in castling to check if relevant pieces have moved already
+	def check_if_moved(king, rook)
+		if king.has_moved
+			raise "#{king} has moved already and cannot castle"
+		elsif rook.has_moved
+			raise "#{rook} has moved already and cannot castle"
+		end
+		false
+		
+	end
+	#used in castling to check if the path taken by the king is under check
+	def check_king_path(king_tile,direction,danger_tiles)
+		
+		0.upto(2) do |num|
+			king_check?(king_tile.neighbor(direction * num).to_s,danger_tiles)
+		end
+
+		
+	end
+	def check_rook_path (rook,rook_destination_tile)
+		if rook.moveTiles_list.include?(rook_destination_tile.to_s) && rook_destination_tile.is_empty?
+			return true
+		else
+			raise "Path between #{rook} and King is not clear"
+		end
+		
+	end
 	def kill_piece(piece)
 		index=active_pieces.find_index(piece)
 		active_pieces.delete_at(index)

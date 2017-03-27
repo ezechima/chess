@@ -2,6 +2,8 @@
 Next Steps.. 
 
 Add Castle functionality
+	Add castle RegEx
+	Add Castle method
 Add enpassant Capture
 Add random AI Play
 clean up inputs
@@ -27,17 +29,18 @@ class Chess_Player
 
 	end
 	def computer_play(board=nil)
+		sleep(0.5)
 		"d5"
 	end
 	def initialize(player_color)
-
+		@player_color = player_color
 		while (true)
 			puts "What kind of player is #{player_color}.. Human or Computer?"
 			resp = gets.chomp.to_s.downcase[0]
 			if resp == 'h'
-				@player_color = player_color
+				
 				@player_type = :human
-				puts "What is your name"
+				puts "What is #{player_color}'s name"
 				@player_name = gets.chomp
 				break
 			elsif resp == 'c'
@@ -58,6 +61,8 @@ class Chess_Play
 	require_relative 'save_load.rb'
 	include Save_Load
 	MOVE_EXPR = /^([KQRBN]){0,1}([a-h])?([1-8])?(([a-h]{1})([1-8]{1}))$/ 
+	CASTLE_EXPR = /([0|O]-[0|O]){1}(-[0|O])?/
+
 	PIECE_CLASSES = {:K => King, :Q => Queen, :R => Rook, :B => Bishop, :N => Knight, :P =>Pawn}
 	attr_accessor :current_player_index
 
@@ -99,6 +104,7 @@ class Chess_Play
 		
 	def process_directive(input,player)
 		directive = MOVE_EXPR.match(input)
+		castle_directive = CASTLE_EXPR.match(input)
 		if directive != nil
 			piece_class = directive[1] || "P"
 			piece_class_str = PIECE_CLASSES[piece_class.to_sym]
@@ -121,6 +127,9 @@ class Chess_Play
 			raise "Game Loaded"
 		elsif input.to_s.downcase == "exit"
 			exit_game
+		elsif castle_directive != nil
+			rook_side = castle_directive[2] ? 'rook_west' : 'rook_east'
+			@active_board.castle(player.player_color,rook_side)
 
 		else
 			raise "This is an invalid input"

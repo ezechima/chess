@@ -13,7 +13,7 @@ class Point
 	def +(point)
 		point = to_point(point)
 		Point.new(@x + point.x, @y + point.y, @z + point.z)
-
+		
 	end
 	def *(num)
 		
