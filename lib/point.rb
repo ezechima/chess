@@ -15,6 +15,11 @@ class Point
 		Point.new(@x + point.x, @y + point.y, @z + point.z)
 
 	end
+	def *(num)
+		
+		Point.new(@x * num, @y * num, @z * num)
+		
+	end
 
 	def move(point)
 		point = to_point(point)
