@@ -184,14 +184,19 @@ class Knight < Chess_Piece
 end
 class Pawn < Chess_Piece
 	attr_accessor :attack_directions
+	attr_reader :enpassant_rank
 	def initialize (color, first_location)
 		super
 		if color.downcase == 'white'
 			@attack_directions = [NORTH + EAST, NORTH + WEST]
 			@move_directions = [NORTH,NORTH + NORTH]
+			@enpassant_rank = "4"
+			@enpassant_tile_direction = SOUTH
 		elsif color.downcase == 'black'
 			@attack_directions = [SOUTH + EAST, SOUTH + WEST]
 			@move_directions = [SOUTH,SOUTH + SOUTH]
+			@enpassant_rank = "5"
+			@enpassant_tile_direction = NORTH
 		end			
 
 	end
@@ -200,6 +205,13 @@ class Pawn < Chess_Piece
 
 	end
 	def has_moved=(bool)
+		if !has_moved && getTile.rank == @enpassant_rank
+			getTile.neighbor(@enpassant_tile_direction).set_enpassant
+		end
+		if getTile.can_attack_enpassant?
+			getTile.neighbor(@enpassant_tile_direction).kill_enpassant
+		end
+
 		@has_moved = bool
 		@move_directions = [@move_directions[0]]
 	end
@@ -213,7 +225,7 @@ class Pawn < Chess_Piece
 			end
 		end
 		@attackTiles.each do |tile|
-			if !tile.is_empty?
+			if !tile.is_empty? || tile.can_attack_enpassant?
 				@moveTiles = @moveTiles + [tile]
 			end
 		end

@@ -12,8 +12,20 @@ class Chess_Tile
 	def is_empty?
 		@piece ? false : true
 	end
+
+	def can_attack_enpassant?
+		@board.enpassant_tile == @str_location
+	end
+	def set_enpassant
+		@board.enpassant_tile = @str_location
+		
+	end
 	def piece
 		@piece
+	end
+	def kill_enpassant
+		@board.kill_piece(@piece)
+		clear
 	end
 	def piece=(piece)
 		@board.kill_piece(@piece) if @piece 

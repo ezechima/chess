@@ -10,7 +10,7 @@ include Render_Chess_Board
 
 	BOARD_FILE = {"a"=>0,"b"=>1,"c"=>2,"d"=>3,"e"=>4,"f"=>5,"g"=>6,"h"=>7}
 	LOC_REGEXP = /([a-h])([1-8])/ #regular Expression representing a location on the chess board using algebraic notation.
-	attr_accessor :active_pieces, :board, :black_killed_pieces, :white_killed_pieces, :black_pieces_active, :white_pieces_active
+	attr_accessor :active_pieces, :board, :black_killed_pieces, :white_killed_pieces, :black_pieces_active, :white_pieces_active, :enpassant_tile
 	attr_reader :black_attack_tiles, :white_attack_tiles, :black_king, :white_king, :active_pieces_by_color, :killed_pieces_by_color
 
 	def initialize
@@ -149,6 +149,7 @@ include Render_Chess_Board
 		destination_tile = tile(destination)
 		source_tile.clear
 		destination_tile.piece = piece
+		enpassant_tile = nil
 		piece.has_moved = true
 		update_all_attack_tiles
 		piece_color.downcase == 'white' ? king_check?(@white_king,@black_attack_tiles) : king_check?(@black_king,@white_attack_tiles)

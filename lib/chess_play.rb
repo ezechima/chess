@@ -1,9 +1,7 @@
 =begin
 Next Steps.. 
 
-Add Castle functionality
-	Add castle RegEx
-	Add Castle method
+
 Add enpassant Capture
 Add random AI Play
 clean up inputs
