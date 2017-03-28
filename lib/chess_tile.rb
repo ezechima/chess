@@ -23,8 +23,13 @@ class Chess_Tile
 	def piece
 		@piece
 	end
+	def clear_enpassant_flag
+		@board.enpassant_tile = ""
+		
+	end
 	def kill_enpassant
 		@board.kill_piece(@piece)
+		clear_enpassant_flag
 		clear
 	end
 	def piece=(piece)

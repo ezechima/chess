@@ -149,7 +149,7 @@ include Render_Chess_Board
 		destination_tile = tile(destination)
 		source_tile.clear
 		destination_tile.piece = piece
-		enpassant_tile = nil
+		
 		piece.has_moved = true
 		update_all_attack_tiles
 		piece_color.downcase == 'white' ? king_check?(@white_king,@black_attack_tiles) : king_check?(@black_king,@white_attack_tiles)

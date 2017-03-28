@@ -17,6 +17,11 @@ class Chess_Piece
 		@has_moved = false
 		@name = "#{@color} #{self.class} #{first_location}"
 	end
+	def has_moved=(bool)
+		@has_moved = bool
+		getTile.clear_enpassant_flag
+		
+	end
 
 	def attackTiles_list
 		@attackTiles.map {|tile| tile.to_s}
@@ -62,7 +67,9 @@ class Chess_Piece
 		@attackTiles = []
 		@attack_directions.each do |attack_direction|
 			neighbor_tile = @currentTile.neighbor(attack_direction)
-			@attackTiles << neighbor_tile if can_attack?(neighbor_tile)
+			if can_attack?(neighbor_tile)
+				@attackTiles << neighbor_tile 
+			end
 				
 		end	
 		update_moveTiles
@@ -205,15 +212,18 @@ class Pawn < Chess_Piece
 
 	end
 	def has_moved=(bool)
+		@move_directions = [@move_directions[0]]
 		if !has_moved && getTile.rank == @enpassant_rank
 			getTile.neighbor(@enpassant_tile_direction).set_enpassant
+			@has_moved = true
+			return
 		end
 		if getTile.can_attack_enpassant?
 			getTile.neighbor(@enpassant_tile_direction).kill_enpassant
 		end
 
-		@has_moved = bool
-		@move_directions = [@move_directions[0]]
+		super(bool)
+		
 	end
 	def update_moveTiles
 		#@move_directions = [@move_directions[0]] if has_moved # to change, move_directions should be updated when the pieces move method is called
@@ -222,6 +232,8 @@ class Pawn < Chess_Piece
 			neighbor_tile = @currentTile.neighbor(move_direction)
 			if neighbor_tile.is_empty? 
 				@moveTiles << neighbor_tile
+			else
+				break
 			end
 		end
 		@attackTiles.each do |tile|
