@@ -230,7 +230,7 @@ class Pawn < Chess_Piece
 		@moveTiles=[]
 		@move_directions.each do |move_direction| 
 			neighbor_tile = @currentTile.neighbor(move_direction)
-			if neighbor_tile.is_empty? 
+			if neighbor_tile && neighbor_tile.is_empty? 
 				@moveTiles << neighbor_tile
 			else
 				break
