@@ -12,7 +12,7 @@ include Render_Chess_Board
 	LOC_REGEXP = /([a-h])([1-8])/ #regular Expression representing a location on the chess board using algebraic notation.
 	attr_accessor :active_pieces, :board, :black_killed_pieces, :white_killed_pieces, :black_pieces_active, :white_pieces_active, :enpassant_tile
 	attr_reader :black_attack_tiles, :white_attack_tiles, :black_king, :white_king, :active_pieces_by_color, :killed_pieces_by_color
-
+	PROMOTION_PIECES = {:Q => "Queen", :N => "Knight", :R => "Rook", :B => "Bishop"}
 	def initialize
 		@active_pieces=[]
 		@black_pieces_active = []
@@ -189,7 +189,9 @@ include Render_Chess_Board
 
 
 	end
+
 	def rook_side_direction (rook_side)
+
 		rook_side == 'rook_west' ? Chess_Tile::WEST : Chess_Tile::EAST
 
 	end
@@ -233,6 +235,25 @@ include Render_Chess_Board
 		piece.setTile(nil)
 				
 
+
+	end
+	#promote a pawn once it reaches the eight rank
+	def promote_pawn(tile)
+		current_piece = tile.piece
+
+		puts "What piece would you like to promote your pawn to: Q: Queen, R: Rook, N: Knight, B: Bishop"
+		response = gets.chomp.upcase.to_sym
+		promotion_class = PROMOTION_PIECES[response]
+		if !promotion_class
+			raise " This is an invalid selection"
+		else
+			promoted_piece = Object.const_get(promotion_class).new(current_piece.color,tile.to_s)
+			promoted_piece.setTile(tile)
+			@active_pieces_by_color[promoted_piece.color.downcase] << promoted_piece
+			tile.piece = promoted_piece
+			
+			
+		end
 
 	end
 

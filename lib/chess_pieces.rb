@@ -19,7 +19,9 @@ class Chess_Piece
 	end
 	def has_moved=(bool)
 		@has_moved = bool
+		puts self
 		getTile.clear_enpassant_flag
+
 		
 	end
 
@@ -198,11 +200,13 @@ class Pawn < Chess_Piece
 			@attack_directions = [NORTH + EAST, NORTH + WEST]
 			@move_directions = [NORTH,NORTH + NORTH]
 			@enpassant_rank = "4"
+			@promotion_rank = "8"
 			@enpassant_tile_direction = SOUTH
 		elsif color.downcase == 'black'
 			@attack_directions = [SOUTH + EAST, SOUTH + WEST]
 			@move_directions = [SOUTH,SOUTH + SOUTH]
 			@enpassant_rank = "5"
+			@promotion_rank = "1"
 			@enpassant_tile_direction = NORTH
 		end			
 
@@ -218,8 +222,13 @@ class Pawn < Chess_Piece
 			@has_moved = true
 			return
 		end
+		#Pawn attack directions include tiles flagged enpassant
+		#check if this pawn has moved to an enpassant tile, if so then kill the pawn that flagged it
 		if getTile.can_attack_enpassant?
 			getTile.neighbor(@enpassant_tile_direction).kill_enpassant
+		end
+		if getTile.rank == @promotion_rank
+			return getTile.promote_pawn
 		end
 
 		super(bool)

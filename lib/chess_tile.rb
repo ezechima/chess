@@ -27,6 +27,10 @@ class Chess_Tile
 		@board.enpassant_tile = ""
 		
 	end
+	def promote_pawn
+		@board.promote_pawn(self) if @piece.class == Pawn
+	end
+
 	def kill_enpassant
 		@board.kill_piece(@piece)
 		clear_enpassant_flag

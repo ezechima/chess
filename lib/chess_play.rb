@@ -2,7 +2,13 @@
 Next Steps.. 
 
 
-Add enpassant Capture
+Add Pawn promotion
+	 test to see if pawn should be promoted
+	 create method that asks what piece Pawn should be promoted to
+	 clone pawn attributes
+	 Kill pawn
+	 set piece to location
+
 Add random AI Play
 clean up inputs
 
