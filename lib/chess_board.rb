@@ -174,6 +174,7 @@ include Render_Chess_Board
 	end
 	#method to call castle, color is a string of the piece and rook_side is a string telling which rook is moving  could either be rook_east or rook_west
 	def castle(color,rook_side)
+		color = color.downcase
 		direction = rook_side_direction(rook_side)
 		rook = @castle_variables[color][rook_side]
 		king = @castle_variables[color]['king']

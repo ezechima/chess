@@ -19,7 +19,7 @@ class Chess_Piece
 	end
 	def has_moved=(bool)
 		@has_moved = bool
-		puts self
+		
 		getTile.clear_enpassant_flag
 
 		

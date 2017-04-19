@@ -2,12 +2,8 @@
 Next Steps.. 
 
 
-Add Pawn promotion
-	 test to see if pawn should be promoted
-	 create method that asks what piece Pawn should be promoted to
-	 clone pawn attributes
-	 Kill pawn
-	 set piece to location
+add undo functionality
+add game checkmate check
 
 Add random AI Play
 clean up inputs
