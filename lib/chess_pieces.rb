@@ -1,18 +1,15 @@
 class Chess_Piece
 	require_relative 'point.rb'
 
-	NORTH = Point.new(0,1)
-	SOUTH = Point.new(0,-1)
-	EAST = Point.new(1,0)
-	WEST = Point.new(-1,0)
-	attr_reader :color,  :attackTiles, :moveTiles, :name
+
+	attr_reader :color,  :attack_tiles, :move_tiles, :name
 	attr_accessor :has_moved
 
 	#sets the color and current tile for the chess piece
 	def initialize (color, first_location)
-		@attackTiles = []  #Tiles the piece is attacking
-		@currentTile = nil  #Tile the piece is currently on
-		@moveTiles = []	#Tiles the piece can move to, equal to attack tile except for pawns
+		@attack_tiles = []  #Tiles the piece is attacking
+		@current_tile = nil  #Tile the piece is currently on
+		@move_tiles = []	#Tiles the piece can move to, equal to attack tile except for pawns
 		@color = color		#white or black chess piece
 		@has_moved = false
 		@name = "#{@color} #{self.class} #{first_location}"
@@ -25,22 +22,22 @@ class Chess_Piece
 		
 	end
 
-	def attackTiles_list
-		@attackTiles.map {|tile| tile.to_s}
+	def attack_tiles_list
+		@attack_tiles.map {|tile| tile.to_s}
 	end
-	def moveTiles_list
-		@moveTiles.map {|tile| tile.to_s}
+	def move_tiles_list
+		@move_tiles.map {|tile| tile.to_s}
 	end
 
-	def getTile
-		@currentTile
+	def get_tile
+		@current_tile
 	end
 	def get_location
-		@currentTile.to_s
+		@current_tile.to_s
 
 	end
-	def setTile(tile)
-		@currentTile = tile
+	def set_tile(tile)
+		@current_tile = tile
 	end
 
 
@@ -65,7 +62,7 @@ class Chess_Piece
 	end
 	#update attack tiles for pieces which cannot take more than one step in a particular direction
 	#pawns, knight, king.
-	def update_attackTiles_linear
+	def update_attack_tiles_linear
 		@attackTiles = []
 		@attack_directions.each do |attack_direction|
 			neighbor_tile = @currentTile.neighbor(attack_direction)

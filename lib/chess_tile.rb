@@ -1,10 +1,7 @@
 class Chess_Tile
 	
 	attr_accessor  :location, :board, :str_location
-	NORTH = Point.new(0,1)
-	SOUTH = Point.new(0,-1)
-	EAST = Point.new(1,0)
-	WEST = Point.new(-1,0)
+
 	def initialize (board=nil)
 		@piece = nil
 		@board = board
