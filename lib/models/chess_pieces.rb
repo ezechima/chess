@@ -1,5 +1,5 @@
 module ChimaChess
-	require '../helpers/point.rb'
+	require './lib/helpers/point.rb'
 	class ChessPiece
 		
 
@@ -18,20 +18,21 @@ module ChimaChess
 		end
 
 		def update_tiles_attacked (point, board)
+
 			attacked_tiles = []
+			
 			attack_directions.each do |direction|
-				#ensure tile is within borders
-				#continue to check while tile is empty
-				#add next tile if it is opposing tile.
+			
 				freedom = deg_of_freedom
+				puts freedom
 				next_point = point + direction
 				tile  = board.tile(next_point)
-				while (!tile.nil? && !tile.is_empty? && (freedom > 0)) do
+				while (!tile.nil? && tile.is_empty? && (freedom > 0)) do
 					attacked_tiles.push(tile.to_s)
 					tile = board.tile(next_point+direction)
 					freedom -= 1
 				end
-				attacked_tiles.push(tile.to_s) if (!tile.nil? && enemy?(tile.piece) && (freedom > 0))
+				attacked_tiles.push(tile.to_s) if ( !tile.nil? && !tile.is_empty? && enemy?(tile.piece) && (freedom > 0))
 			end
 			attacked_tiles
 
@@ -134,7 +135,7 @@ module ChimaChess
 
 			attack_directions.each do |direction|
 				tile  = board.tile(point + direction)
-				attacked_tiles.push(tile.to_s) if (!tile.is_empty? && enemy?(tile.piece))
+				attacked_tiles.push(tile.to_s) if (!tile.nil? && !tile.is_empty? && enemy?(tile.piece))
 			end
 
 			move_directions.each do |direction|

@@ -1,14 +1,14 @@
 module ChimaChess
-	require './chess_tile.rb'
-	require '../helpers/point.rb'
+	require './lib/models/chess_tile.rb'
+	require './lib/helpers/point.rb'
 	class ChessBoard
 		attr_accessor :board
 
 		def initialize
-			@board = []
+			@board = {}
 			
 			(0..7).each do |x|
-				@board[x] = []
+				@board[x] = {}
 				(0..7).each do |y|
 					
 					@board[x][y]=ChessTile.new(Point.new([x,y]))
@@ -27,25 +27,23 @@ module ChimaChess
 			end
 
 		end
-		def tiles_in_direction(direction)
 
-			
-		end
 
 		def piece(location)
 			tile(location).piece
 		end
 
+
+
 		def each_tile
 			y_loc = 0
 			x_loc = 0
-			@board.each do |x|
-				x.each do |tile|
-					yield(tile,Point.new(x_loc,y_loc))
-					y_loc += 1
+			@board.each do |x,column|
+				column.each do |y,tile|
+					yield(tile,Point.new(x,y))
+					
 				end
-				y_loc = 0
-				x_loc +=1
+
 
 			end
 			true

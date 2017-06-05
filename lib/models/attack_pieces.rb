@@ -31,8 +31,8 @@ module ChimaChess
 	class AttackObject
 		attr_accessor :list_of_tiles, :attacker_class, :attacker_location
 
-		def initialize(list_of_tiles, attacker_class, attacker_location)
-			@list_of_tiles = []
+		def initialize(list_of_tiles=[], attacker_class, attacker_location)
+			@list_of_tiles = list_of_tiles
 			
 		end
 
