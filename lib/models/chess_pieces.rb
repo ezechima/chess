@@ -21,15 +21,15 @@ module ChimaChess
 
 			attacked_tiles = []
 			
-			attack_directions.each do |direction|
+			attack_directions.each do |direction|				#for each direction
 			
-				freedom = deg_of_freedom
-				puts freedom
+				freedom = deg_of_freedom						#initialize the range of motion
 				next_point = point + direction
 				tile  = board.tile(next_point)
 				while (!tile.nil? && tile.is_empty? && (freedom > 0)) do
 					attacked_tiles.push(tile.to_s)
-					tile = board.tile(next_point+direction)
+					next_point = next_point + direction
+					tile = board.tile(next_point)
 					freedom -= 1
 				end
 				attacked_tiles.push(tile.to_s) if ( !tile.nil? && !tile.is_empty? && enemy?(tile.piece) && (freedom > 0))

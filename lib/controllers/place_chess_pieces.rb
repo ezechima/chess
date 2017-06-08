@@ -37,6 +37,16 @@ module ChimaChess
 							 ]
 			place_standard_pieces(board)
 		end
+		def load_test_config(board)
+		   @piece_positions = [	[["2","7"],('a'..'h'),'ChimaChess::Pawn'],
+								[["3","6"],["a","h"],'ChimaChess::Rook'],
+							 	[["4","5"],["b","g"],'ChimaChess::Knight'],
+							 	[["4","5"],["c","f"],'ChimaChess::Bishop'],	
+							 	[["3","6"],["d"],'ChimaChess::Queen'],
+							 	[["1","8"],["e"],'ChimaChess::King']
+							 ]
+			place_standard_pieces(board)
+		end
 
 		def clear_pieces(board)
 			board.each_tile do|tile, point|
