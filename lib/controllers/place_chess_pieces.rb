@@ -5,7 +5,8 @@ module ChimaChess
 		def initialize
 			@piece_positions =[]
 		end
-		def place_chess_pieces(board, config="standard", clear_flag=true)
+		def place_chess_pieces(board: , config: "standard", clear_flag: true)
+		
 			board = clear_pieces(board) if clear_flag
 			board = send("load_#{config}_config",board)
 			board
@@ -17,7 +18,7 @@ module ChimaChess
 				color = :white
 				piece[0].each do |rank|
 					piece[1].each do |file|
-						new_piece = Object.const_get(piece[2]).new(color,file+rank)
+						new_piece = Object.const_get(piece[2]).new(color: color,first_location: file+rank)
 						board.tile(file+rank).piece = new_piece
 
 					end
@@ -50,7 +51,7 @@ module ChimaChess
 
 		def clear_pieces(board)
 			board.each_tile do|tile, point|
-				tile.piece = nil
+				tile.clear_piece
 			end
 			board
 

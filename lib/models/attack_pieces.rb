@@ -22,20 +22,24 @@ module ChimaChess
 
 		def update_white_pieces (piece)
 			white_active_pieces[piece.name]=piece
-			
+
 		end
 
 
 	end
 
 	class AttackObject
-		attr_accessor :list_of_tiles, :attacker_class, :attacker_location
+		attr_accessor :list_of_tiles, :attacker_type, :attacker_location, :attacker_color
 
-		def initialize(list_of_tiles=[], attacker_class, attacker_location)
+		def initialize(list_of_tiles: [], attacker_type:, attacker_location:, attacker_color:)
 			@list_of_tiles = list_of_tiles
-			@attacker_class = attacker_class
+			@attacker_type = attacker_type
 			@attacker_location = attacker_location
-			
+			@attacker_color = attacker_color
+
+		end
+		def include?(str)
+			list_of_tiles.include?(str.to_s)
 		end
 
 
@@ -63,6 +67,10 @@ module ChimaChess
 			end
 			simplified_list
 		end
+		def tiles_attacked
+			tiles_attacked_by_white.merge(tiles_attacked_by_black)
+		end
+
 
 		private
 
@@ -73,12 +81,23 @@ module ChimaChess
 
 		def update_tiles_attacked_by_black (piece,point,board)
 			 list_of_tiles = piece.update_tiles_attacked(point, board)
-			 tiles_attacked_by_black[piece.name] = AttackObject.new(list_of_tiles,piece.class,point.to_chess_notation)
+			 tiles_attacked_by_black[piece.name] = create_attack_object(list_of_tiles,piece.piece_type,point.to_chess_notation,piece.color)
 		end
 
 		def update_tiles_attacked_by_white(piece,point,board)
 			 list_of_tiles = piece.update_tiles_attacked(point, board)
-			 tiles_attacked_by_white[piece.name] = AttackObject.new(list_of_tiles,piece.class,point.to_chess_notation)
+			 tiles_attacked_by_white[piece.name] = create_attack_object(list_of_tiles,piece.piece_type,point.to_chess_notation,piece.color)
+		end
+
+		def create_attack_object(list_of_tiles,attacker_type,attacker_location,attacker_color)
+			AttackObject.new(
+				list_of_tiles: list_of_tiles,
+				attacker_type: attacker_type,
+				attacker_location: attacker_location,
+				attacker_color: attacker_color
+				)
+
+
 		end
 	end
 end

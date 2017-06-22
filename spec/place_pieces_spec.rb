@@ -8,7 +8,7 @@ describe ChimaChess::PlaceChessPieces do
 		ChimaChess::PlaceChessPieces.new
 	end
 	let (:placed_board) do
-		placer.place_chess_pieces(myboard)
+		placer.place_chess_pieces(board: myboard, config: "standard")
 	end
 	let (:piece_count) do
 		count=0
@@ -41,16 +41,16 @@ describe ChimaChess::PlaceChessPieces do
 		end
 
 		it 'pieces are properly positined' do
-			expect(placed_board.tile(:a1).piece.name).to eql("white ChimaChess::Rook a1")
-			expect(placed_board.tile(:a2).piece.name).to eql("white ChimaChess::Pawn a2")
-			expect(placed_board.tile(:h2).piece.name).to eql("white ChimaChess::Pawn h2")
-			expect(placed_board.tile(:a8).piece.name).to eql("black ChimaChess::Rook a8")
-			expect(placed_board.tile(:h7).piece.name).to eql("black ChimaChess::Pawn h7")
-			expect(placed_board.tile(:d1).piece.name).to eql("white ChimaChess::Queen d1")
-			expect(placed_board.tile(:e1).piece.name).to eql("white ChimaChess::King e1")
-			expect(placed_board.tile(:g8).piece.name).to eql("black ChimaChess::Knight g8")
-			expect(placed_board.tile(:c8).piece.name).to eql("black ChimaChess::Bishop c8")
-			expect(placed_board.tile(:e8).piece.name).to eql("black ChimaChess::King e8")
+			expect(placed_board.tile(:a1).piece.name).to eql("white Rook a1")
+			expect(placed_board.tile(:a2).piece.name).to eql("white Pawn a2")
+			expect(placed_board.tile(:h2).piece.name).to eql("white Pawn h2")
+			expect(placed_board.tile(:a8).piece.name).to eql("black Rook a8")
+			expect(placed_board.tile(:h7).piece.name).to eql("black Pawn h7")
+			expect(placed_board.tile(:d1).piece.name).to eql("white Queen d1")
+			expect(placed_board.tile(:e1).piece.name).to eql("white King e1")
+			expect(placed_board.tile(:g8).piece.name).to eql("black Knight g8")
+			expect(placed_board.tile(:c8).piece.name).to eql("black Bishop c8")
+			expect(placed_board.tile(:e8).piece.name).to eql("black King e8")
 		end
 
 

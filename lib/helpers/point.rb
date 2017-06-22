@@ -2,8 +2,7 @@ module ChimaChess
 	LOC_REGEXP = /([a-h])([1-8]$)/
 	CHESS_FILE_NUMBERS = {"a"=>0,"b"=>1,"c"=>2,"d"=>3,"e"=>4,"f"=>5,"g"=>6,"h"=>7}
 
-	class ChessGameException < Exception
-	end
+	require './lib/helpers/chess_game_exception.rb'
 
 
 	class Array_Initialize

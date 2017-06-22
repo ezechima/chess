@@ -20,6 +20,17 @@ module ChimaChess
 		def to_s
 			location.to_chess_notation
 		end
+		def clear_piece
+			@piece && @piece.set_location("")
+			@piece = nil
+			
+		end
+
+		def piece=(piece)
+			piece.set_location(to_s)
+			@piece = piece
+		end
+
 		
 
 
