@@ -1,9 +1,13 @@
 module ChimaChess
 	class ChessSessionController
 		attr_accessor :session_manager, :state_controller
+		attr_reader  :application
 
-		def initialize
-			create_session_manager
+		def initialize(application)
+			@application = application
+			@session_manager = create_session_manager
+
+
 
 		end
 		def new_session
@@ -22,7 +26,7 @@ module ChimaChess
 		end
 
 		def create_session_manager
-			session_manager = ChimaChess::SessionManager.new()
+			 ChimaChess::SessionManager.new()
 
 		end
 		def create_state_controller(session)
