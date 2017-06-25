@@ -40,7 +40,7 @@ module ChimaChess
 	end
 
 	class GameStateExprProcessor
-		STATE_EXPR = {"undo"=> "undo","redo"=>"redo"}
+		STATE_EXPR = {"undo"=> "undo","redo"=>"redo", "reset" => "reset"}
 		def self.match(string)
 			match = STATE_EXPR[string.downcase]
 			send("process_#{match}",string)
