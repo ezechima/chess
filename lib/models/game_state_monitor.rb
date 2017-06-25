@@ -81,8 +81,3 @@ module ChimaChess
 
 	end
 end
-
-class GameStateObject
-	attr_reader :board, :player
-
-end
