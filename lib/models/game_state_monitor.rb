@@ -21,6 +21,7 @@ module ChimaChess
 		def add_state (state_object)
 			increase_index
 			push_state_objects(state_object)
+			current_state
 
 
 		end
