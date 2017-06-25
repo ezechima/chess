@@ -1,4 +1,5 @@
 module ChimaChess
+	require './lib/helpers/object_duplicator.rb'
 	class StateMonitor
 		attr_reader :state_objects, :index
 
@@ -74,7 +75,7 @@ module ChimaChess
 		end
 
 		def create_working_object (object)
-			object.clone
+			ChimaChess::ObjectDuplicator.duplicate(object)
 
 		end
 
