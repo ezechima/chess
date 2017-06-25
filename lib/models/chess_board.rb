@@ -2,18 +2,19 @@ module ChimaChess
 	require './lib/models/chess_tile.rb'
 	require './lib/helpers/point.rb'
 	class ChessBoard
-		attr_accessor :board
+		attr_accessor :board, :turn_to_play, :enpassant_tile
 
 		def initialize
 			@board = {}
-			
+			@turn_to_play = :white
+
 			(0..7).each do |x|
 				@board[x] = {}
 				(0..7).each do |y|
-					
+
 					@board[x][y]=ChessTile.new(Point.new([x,y]))
 				end
-		
+
 			end
 
 		end
@@ -41,7 +42,7 @@ module ChimaChess
 			@board.each do |x,column|
 				column.each do |y,tile|
 					yield(tile,Point.new(x,y))
-					
+
 				end
 
 
@@ -53,6 +54,10 @@ module ChimaChess
 			each_tile do|tile,point|
 				yield(tile.piece,point) if !tile.is_empty?
 			end
+		end
+
+		def switch_player
+			turn_to_play = (turn_to_play == :white ? :black : :white)
 		end
 
 	end

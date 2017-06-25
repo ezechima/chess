@@ -5,6 +5,8 @@ load 'lib/models/attack_pieces.rb'
 load 'lib/controllers/place_chess_pieces.rb'
 load 'lib/controllers/find_piece.rb'
 load 'lib/controllers/attack_check.rb'
+load 'lib/controllers/chess_input_controllers.rb'
+load 'lib/controllers/castle_check.rb'
 
 @my_board = ChimaChess::ChessBoard.new
 @my_tile = @my_board.tile('d5')
@@ -59,3 +61,26 @@ puts "Testing Find Piece"
 puts "Testing Attack Check"
 	puts ChimaChess::AttackCheck.check(board: @my_board2, color: :white, tiles: ['a1','a2'])
 	puts ChimaChess::AttackCheck.check(board: @my_board2, color: :white, tiles: 'b5')
+
+puts "Testing Castle Check"
+	#puts ChimaChess::CastleCheck.check(board: @my_board2, color: :white, side: :queen_side)
+puts 'Testing Input Controller'
+	puts ChimaChess::ChessTextProcessor.process_input("New")
+
+	puts ChimaChess::ChessTextProcessor.process_input("LOAD")
+	puts ChimaChess::ChessTextProcessor.process_input("save")
+	puts ChimaChess::ChessTextProcessor.process_input("eXit")
+	puts ChimaChess::ChessTextProcessor.process_input("undo")
+	puts ChimaChess::ChessTextProcessor.process_input("redo")
+	puts ChimaChess::ChessTextProcessor.process_input("b4").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("3c7").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("a4d8").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("Nb4").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("K3c7").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("Ba4d8").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("Kb4").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("Q3c7").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("Bf4h8").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("0-0").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("O-O-O").inspect
+	puts ChimaChess::ChessTextProcessor.process_input("O-O").inspect

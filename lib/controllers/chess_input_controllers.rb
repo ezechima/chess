@@ -8,8 +8,8 @@ module ChimaChess
 			create_malform_exception(message)
 
 		end
-		def self.create_malform_exception
-			raise ChimaChess::ChessGameException(message)
+		def self.create_malform_exception (message)
+			raise ChimaChess::ChessGameException.new(message)
 
 		end
 
@@ -19,23 +19,23 @@ module ChimaChess
 		SESSION_EXPR = {"new"=> "new","save"=>"save", "load" => 'load', 'exit' => 'exit'}
 		def self.match(string)
 			match = SESSION_EXPR[string.downcase]
-			object.send("process_#{match}",string)
+			send("process_#{match}",string)
 
 		end
-		def process_(string)
+		def self.process_(string)
 			ChimaChess::MalformExprProcessor.match(string)
 		end
-		def process_new(string)
-
+		def self.process_new(string)
+			puts 'new not implemented'
 		end
-		def process_save(string)
-
+		def self.process_save(string)
+			puts 'save not implemented'
 		end
-		def process_load(string)
-
+		def self.process_load(string)
+			puts "load not implemented"
 		end
-		def process_exit(string)
-
+		def self.process_exit(string)
+			puts "exit not implemented"
 		end
 	end
 
@@ -43,17 +43,17 @@ module ChimaChess
 		STATE_EXPR = {"undo"=> "undo","redo"=>"redo"}
 		def self.match(string)
 			match = STATE_EXPR[string.downcase]
-			object.send("process_#{match}",string)
+			send("process_#{match}",string)
 
 		end
-		def process_(string)
+		def self.process_(string)
 			ChimaChess::GameSessionExprProcessor.match(string)
 		end
-		def process_undo(string)
-
+		def self.process_undo(string)
+			puts "undo not implemented"
 		end
-		def process_redo(string)
-
+		def self.process_redo(string)
+				puts 'redo not implemented'
 		end
 	end
 
@@ -61,15 +61,15 @@ module ChimaChess
 	class CastleExprProcessor
 		def self.match(string)
 			move_match = CASTLE_EXPR.match(string)
-			object.send("process_#{move_match.class}",,move_match||string)
+			send("process_#{move_match.class}",move_match||string)
 
 		end
-		def process_NilClass(string)
+		def self.process_NilClass(string)
 			ChimaChess::GameStateExprProcessor.match(string)
 		end
-		def process_MatchData(directive)
+		def self.process_MatchData(directive)
 			castle_side = directive[2] ? :queen_side : :king_side
-			ChessCastleInput.new(get_color,castle_side)
+			castle_side
 
 		end
 	end
@@ -78,20 +78,20 @@ module ChimaChess
 
 		def self.match(string)
 			move_match = MOVE_EXPR.match(string)
-			object.send("process_#{move_match.class}",move_match||string)
+			send("process_#{move_match.class}",move_match||string)
 
 		end
-		def process_NilClass(string)
+		def self.process_NilClass(string)
 			ChimaChess::CastleExprProcessor.match(string)
 		end
-		def process_MatchData(directive)
+		def self.process_MatchData(directive)
 			piece_type_char = directive[1] || "P"
 			piece_type = PIECE_TYPES[piece_type_char.to_sym]
 			destination = directive[4]
 			source_rank = directive[3]
 			source_file = directive [2]
-			ChessRegularInput.new(get_color,piece_type_sym,destination,source_rank,source_file)
-
+			#ChessRegularInput.new(get_color,piece_type_sym,destination,source_rank,source_file)
+			[piece_type,destination, source_rank, source_file]
 		end
 	end
 

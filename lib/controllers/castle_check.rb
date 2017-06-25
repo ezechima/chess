@@ -14,7 +14,7 @@ module ChimaChess
 		end
 
 		def self.check_piece(board, piece_position,piece_type)
-			piece = board(piece_position)
+			piece = board.piece(piece_position)
 			if piece && piece.piece_type == piece_type && !piece.has_moved?
 				return true
 			else
@@ -60,12 +60,12 @@ module ChimaChess
 				ChimaChess::AttackCheck.check(board: board,tiles: get_king_move_range,color: color)
 			rescue ChimaChess::ChessGameException => exc
 				raise ChimaChess::ChessGameException.new("Cannot Castle: #{exc.message}")
-					
+
 			end
 			true
 		end
 
-		def get_king_move_range(side,color_index)
+		def self.get_king_move_range(side,color_index)
 			(KING_POSITION..KING_DESTINATION[side]).to_a.collect{|file| file+color_index}
 		end
 
