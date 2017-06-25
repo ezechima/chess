@@ -1,5 +1,5 @@
 module ChimaChess
-	class ChessGameStateController
+	class ChessStateController
 		attr_accessor :state_monitor
 		def initialize(state_monitor)
 			@state_monitor = state_monitor
