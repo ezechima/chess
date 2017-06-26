@@ -33,7 +33,7 @@ module ChimaChess
 					tile = board.tile(next_point)
 					freedom -= 1
 				end
-				attacked_tiles.push(tile.to_s) if ( !tile.nil? && !tile.is_empty? && enemy?(tile.piece) && (freedom > 0))
+				attacked_tiles.push(tile.to_s) if ( enemy_position?(tile) && (freedom > 0))
 			end
 			attacked_tiles
 
@@ -41,6 +41,10 @@ module ChimaChess
 
 		def enemy? (piece)
 			!(color == piece.color)
+		end
+
+		def enemy_position?(tile)
+			!tile.nil? && !tile.is_empty? && enemy?(tile.piece)
 		end
 
 		def set_location(location)
@@ -143,7 +147,7 @@ module ChimaChess
 			end
 
 		end
-		
+
 		def reduce_advance
 			@move_directions = @move_directions[0]
 		end
@@ -153,7 +157,7 @@ module ChimaChess
 
 			attack_directions.each do |direction|
 				tile  = board.tile(point + direction)
-				attacked_tiles.push(tile.to_s) if (!tile.nil? && !tile.is_empty? && enemy?(tile.piece))
+				attacked_tiles.push(tile.to_s) if enemy_position?(tile) || can_attack_enpassant?(tile,board)
 			end
 
 			move_directions.each do |direction|
@@ -163,6 +167,8 @@ module ChimaChess
 			attacked_tiles
 		end
 
-
+		def can_attack_enpassant?(tile,board)
+			!tile.nil? && (tile.to_s == board.enpassant_tile)
+		end
 	end
 end
