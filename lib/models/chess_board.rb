@@ -3,7 +3,7 @@ module ChimaChess
 	require './lib/helpers/point.rb'
 	class ChessBoard
 		attr_accessor :board, :turn_to_play
-		attr_reader :enpassant_tile
+		attr_reader :enpassant_tile, :enpassant_victim
 
 		def initialize
 			@board = {}
@@ -59,7 +59,10 @@ module ChimaChess
 		end
 
 		def set_enpassant_tile(tile_str)
-			@enpassant_tile = tile_str
+			@enpassant_tile = tile_str || set_enpassant_victim(tile_str)
+		end
+		def set_enpassant_victim(tile_str)
+			@enpassant_victim = tile_str
 		end
 	end
 end
