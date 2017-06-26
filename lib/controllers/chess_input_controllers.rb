@@ -2,6 +2,35 @@ module ChimaChess
 	MOVE_EXPR = /^([KQRBN]){0,1}([a-h])?([1-8])?(([a-h]{1})([1-8]{1}))$/
 	CASTLE_EXPR = /([0|O]-[0|O]){1}(-[0|O])?/
 	PIECE_TYPES = {:K => :King, :Q => :Queen, :R => :Rook, :B => :Bishop, :N => :Knight, :P => :Pawn}
+
+
+	class MessageObject
+		attr_reader :message_type, :message
+		def initialize(message_type:,message:)
+				@message_type = message_type
+				@message = message
+		end
+
+	end
+	class CastleMessageObject < MessageObject
+		attr_reader :castle_side
+		def initialize(castle_side:)
+			super(message_type: :state_message, message: :move)
+			@castle_side = castle_side
+		end
+	end
+	class MoveMessageObject < MessageObject
+		attr_reader :piece_type, :destination, :rank, :file
+		def initialize(piece_type:, destination:,rank:, file:)
+			super(message_type: :state_message, message: :move)		
+			@piece_type = piece_type
+			@destination = destination
+			@rank = rank
+			@file = file
+
+		end
+
+
 	class MalformExprProcessor
 		def self.match(string)
 			message = "I don't understand '#{string}'"
@@ -16,44 +45,33 @@ module ChimaChess
 	end
 
 	class GameSessionExprProcessor
-		SESSION_EXPR = {"new"=> "new","save"=>"save", "load" => 'load', 'exit' => 'exit'}
+		SESSION_EXPR = {"new"=> :new,"save"=> :save, "load" => :load, 'exit' => :exit}
 		def self.match(string)
 			match = SESSION_EXPR[string.downcase]
-			send("process_#{match}",string)
+			send("process_#{match.class.to_s}",match||string)
 
 		end
-		def self.process_(string)
+		def self.process_NilClass(string)
 			ChimaChess::MalformExprProcessor.match(string)
 		end
-		def self.process_new(string)
-			puts 'new not implemented'
+		def self.process_Symbol(sym)
+			ChimaChess::MessageObject.new(message_type: :session_message, message: sym)
 		end
-		def self.process_save(string)
-			puts 'save not implemented'
-		end
-		def self.process_load(string)
-			puts "load not implemented"
-		end
-		def self.process_exit(string)
-			puts "exit not implemented"
-		end
+
 	end
 
 	class GameStateExprProcessor
-		STATE_EXPR = {"undo"=> "undo","redo"=>"redo", "reset" => "reset"}
+		STATE_EXPR = {"undo"=> :undo,"redo"=> :redo, "reset" => :reset}
 		def self.match(string)
 			match = STATE_EXPR[string.downcase]
-			send("process_#{match}",string)
+			send("process_#{match.class.to_s}",match||string)
 
 		end
-		def self.process_(string)
+		def self.process_NilClass(string)
 			ChimaChess::GameSessionExprProcessor.match(string)
 		end
-		def self.process_undo(string)
-			puts "undo not implemented"
-		end
-		def self.process_redo(string)
-				puts 'redo not implemented'
+		def self.process_Symbol(sym)
+			ChimaChess::MessageObject.new(message_type: :state_message, message: sym)
 		end
 	end
 
@@ -69,7 +87,10 @@ module ChimaChess
 		end
 		def self.process_MatchData(directive)
 			castle_side = directive[2] ? :queen_side : :king_side
-			castle_side
+			create_message(castle_side)
+		end
+		def create_message(castle_side)
+			ChimaChess::CastleMessageObject.new(castle_side: castle_side)
 
 		end
 	end
@@ -90,8 +111,15 @@ module ChimaChess
 			destination = directive[4]
 			source_rank = directive[3]
 			source_file = directive [2]
-			#ChessRegularInput.new(get_color,piece_type_sym,destination,source_rank,source_file)
-			[piece_type,destination, source_rank, source_file]
+			create_message(piece_type,destination,source_rank,source_file)
+		end
+		def create_message(piece_type,destination,source_rank,source_file)
+			ChimaChess::MoveMessageObject.new (
+				piece_type: piece_type,
+				destination: destination,
+				rank: source_rank,
+				file: source_file
+				)
 		end
 	end
 
