@@ -2,7 +2,7 @@ module ChimaChess
 	require './lib/models/chess_tile.rb'
 	require './lib/helpers/point.rb'
 	class ChessBoard
-		attr_accessor :board, :turn_to_play,
+		attr_accessor :board, :turn_to_play
 		attr_reader :enpassant_tile
 
 		def initialize
@@ -26,7 +26,7 @@ module ChimaChess
 				nil
 			end
 		end
-		
+
 		def king_loc(color)
 			each_piece do |piece,point|
 				return point.to_s  if piece.piece_type == :King && piece.color == color
