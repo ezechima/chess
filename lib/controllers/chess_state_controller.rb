@@ -5,19 +5,17 @@ module ChimaChess
 			@state_monitor = state_monitor
 		end
 
-		def process_request(request)
-			request_id = request.request_id
-			send("#{request_id}")
-
+		def process(message)
+			send("process_#{message.message}",message)
 		end
-		def reset
+		def reset(message)
 			state_monitor.reset_state
 		end
-		def undo
+		def undo(message)
 			state_monitor.previous_state
 
 		end
-		def redo
+		def redo(message)
 			state_monitor.next_state
 
 		end
@@ -25,9 +23,17 @@ module ChimaChess
 			state_monitor.add_state(state)
 
 		end
-		def move
-			new_state = move_controller.process_request(request)
+		def current_state
+			state_monitor.current_state
+
+		end
+		def move(message)
+			new_state = process_move(message: message, state: current_state)
 			commit(new_state)
+		end
+		def process_move(message:, state:)
+			ChimaChess::MoveController.process(message: message, state: state)
+
 		end
 	end
 end
