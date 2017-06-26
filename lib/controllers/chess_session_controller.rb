@@ -6,10 +6,20 @@ module ChimaChess
 		def initialize(application)
 			@application = application
 			@session_manager = create_session_manager
-
-
+		end
+		def process(message)
+			send("process_#{message.message_type}",message)
 
 		end
+		def process_session_message(message)
+			send("#{message.message}_session")
+
+		end
+		def process_state_message(message)
+			state_controller.process(message)
+			
+		end
+
 		def new_session
 			session = session_manager.new_session
 			create_state_controller(session)
@@ -19,10 +29,12 @@ module ChimaChess
 			session = session_manager.load_session
 			create_state_controller(session)
 		end
-		def stop_session
-		end
 		def save_session
 			session_manager.save_session
+		end
+		def exit_session
+			try_save
+			application.exit
 		end
 
 		def create_session_manager
