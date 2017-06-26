@@ -11,13 +11,17 @@ module ChimaChess
 			send("process_#{message.message_type}",message)
 
 		end
+		def current_state
+			state_controller.current_state
+
+		end
 		def process_session_message(message)
 			send("#{message.message}_session")
 
 		end
 		def process_state_message(message)
 			state_controller.process(message)
-			
+
 		end
 
 		def new_session
