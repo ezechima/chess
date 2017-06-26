@@ -62,7 +62,11 @@ module ChimaChess
 				raise ChimaChess::ChessGameException.new("Cannot Castle: #{exc.message}")
 
 			end
-			true
+			{ rook_position: var_rook_position,
+				rook_destination:var_rook_destination,
+				king_position: var_king_position,
+				king_destination: var_king_destination
+			}
 		end
 
 		def self.get_king_move_range(side,color_index)
