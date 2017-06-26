@@ -11,5 +11,8 @@ module ChimaChess
       session_controller.current_state
 
     end
+    def exit
+      exit(true)
+    end
   end
 end
