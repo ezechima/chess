@@ -13,20 +13,22 @@ module ChimaChess
 
 	end
 	class CastleMessageObject < MessageObject
-		attr_reader :castle_side
+		attr_reader :castle_side, :move_class
 		def initialize(castle_side:)
 			super(message_type: :state_message, message: :move)
 			@castle_side = castle_side
+			@move_class = :castle_move
 		end
 	end
 	class MoveMessageObject < MessageObject
-		attr_reader :piece_type, :destination, :rank, :file
+		attr_reader :piece_type, :destination, :rank, :file, :move_class
 		def initialize(piece_type:, destination:,rank:, file:)
-			super(message_type: :state_message, message: :move)		
+			super(message_type: :state_message, message: :move)
 			@piece_type = piece_type
 			@destination = destination
 			@rank = rank
 			@file = file
+			@move_class = :regular_move
 
 		end
 
