@@ -1,5 +1,21 @@
 module ChimaChess
   require './lib/models/attack_pieces.rb'
+  class KingChecker
+    def self.check(board)
+      king_loc = board.king_loc(board.turn_to_play)
+      begin
+        ChimaChess::AttackCheck.check(
+          board: board,
+          color: board.turn_to_play,
+          tiles: king_loc
+        )
+      rescue ChimaChess::ChessGameException => exc
+        raise ChimaChess::ChessGameException.new("King on #{exc.message}")
+
+      end
+
+    end
+  end
   class AttackModelCreator
     def self.create(board)
       attack_list = ChimaChess::AttackList.new
