@@ -15,7 +15,7 @@ module ChimaChess
 			@name = "#{@color} #{piece_type} #{first_location}"
 			@deg_of_freedom = 16  #maximum number of steps pieces can move in each direction,
 														#it is one for pawns, kings and Knights
-			@has_moved = false	
+			@has_moved = false
 		end
 
 		def update_tiles_attacked (point, board)
@@ -142,6 +142,10 @@ module ChimaChess
 				@move_directions = [SOUTH,SOUTH + SOUTH]
 			end
 
+		end
+		
+		def reduce_advance
+			@move_directions = @move_directions[0]
 		end
 
 		def update_tiles_attacked (point, board)
