@@ -42,7 +42,7 @@ module ChimaChess
 		end
 
 		def create_session_manager
-			 ChimaChess::SessionManager.new()
+			 ChimaChess::SessionManager.new(self)
 
 		end
 		def create_state_controller(session)
