@@ -2,11 +2,12 @@ module ChimaChess
 	require './lib/models/chess_tile.rb'
 	require './lib/helpers/point.rb'
 	class ChessBoard
-		attr_accessor :board, :turn_to_play
+		attr_accessor :board, :turn_to_play, :params
 		attr_reader :enpassant_tile, :enpassant_victim
 
 		def initialize
 			@board = {}
+			@params = {}
 			@turn_to_play = :white
 			@enpassant_tile = nil
 
