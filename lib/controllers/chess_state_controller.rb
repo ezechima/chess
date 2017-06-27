@@ -29,6 +29,7 @@ module ChimaChess
 		end
 		def move(message)
 			new_state = process_move(message: message, state: current_state)
+			new_state.switch_player
 			commit(new_state)
 		end
 		def process_move(message:, state:)
