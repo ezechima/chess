@@ -2,9 +2,12 @@ module ChimaChess
   class PieceMover
     def self.move_piece(src,destination,board)
       piece = board.tile(src).piece
+      set_piece(piece,destination,board)
+      clear(src,board)
+    end
+    def self.set_piece(piece,destination,board)
       clear(destination,board)
       board.tile(destination).piece = piece
-      clear(src,board)
       piece.has_moved = true
     end
     def self.clear(tile_loc,board)
@@ -16,18 +19,41 @@ module ChimaChess
 
     def self.process(message,state)
       src_loc = find_piece_loc(message,state)
-
-      if message.destination == state.enpassant_tile
+      destination = message.destination
+      check_enpassant_conditions(destination,state)
+      move_piece(src_loc, destination,state)
+      reduce_advance(destination,state)
+      king_check(state)
+      check_piece_promotion(destination,state)
+    end
+    def self.check_enpassant_conditions(destination,state)
+      if destination == state.enpassant_tile
         kill_enpassant(state)
         state.set_enpassant_tile(nil)
-      elsif can_set_enpassant?(src,message.destination,state)
-        set_enpassant(src,message.destination,state)
+      elsif can_set_enpassant?(src,destination,state)
+        set_enpassant(src,destination,state)
       else
         state.set_enpassant_tile(nil)
       end
+    end
 
-      move_piece(src_loc,message.destination,state)
-      king_check(state)
+    def check_piece_promotion(location,state)
+      promote_piece(location,state) if should_promote?(location,state)
+    end
+
+    def should_promote?(location,state)
+      (location[1] == "1" || location[1] == "8") && state.piece(location).piece_type == :Pawn
+    end
+    def promote_piece(location,state)
+      piece_type_to_promote_to = state.params[:application].process_dialog(dialog_type: :promotion_dialog, state: state)
+      new_piece = create_piece(piece_type_to_promote_to)
+      set_piece(new_piece,location,state)
+    end
+    def set_piece(piece,location,state)
+        ChimaChess::PieceMover.set_piece(piece,location,state)
+    end
+    def self.reduce_advance(src,state)
+      state.piece(src).reduce_advance
     end
 
     def self.kill_enpassant(state)

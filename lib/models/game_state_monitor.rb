@@ -22,8 +22,6 @@ module ChimaChess
 			increase_index
 			push_state_objects(state_object)
 			current_state
-
-
 		end
 
 		def current_state
