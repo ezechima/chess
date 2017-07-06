@@ -1,5 +1,6 @@
 module ChimaChess
   require './lib/controllers/board_creator.rb'
+  require './lib/models/game_state_monitor.rb'
 
 	class SessionManager
 		attr_accessor :active_session
@@ -21,7 +22,7 @@ module ChimaChess
 			#session_writer.write(active_session)
 		end
 		def create_new_session
-			board = board_creator.create_new_board
+			board = create_new_board
       update_board_params(board)
 			session = create_state_monitor(board)
 			session
@@ -30,7 +31,7 @@ module ChimaChess
 			ChimaChess::BoardCreator.create()
 		end
 		def create_state_monitor(board)
-			ChimaChess::StateMonitor.new(board)
+			ChimaChess::StateMonitor.new(state_object: board)
 		end
     def update_board_params(board)
       board.params[:application] = session_controller.application

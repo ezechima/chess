@@ -1,4 +1,5 @@
 module ChimaChess
+	require './lib/controllers/move_controller.rb'
 	class ChessStateController
 		attr_accessor :state_monitor
 		def initialize(state_monitor)
@@ -6,7 +7,7 @@ module ChimaChess
 		end
 
 		def process(message)
-			send("process_#{message.message}",message)
+			send("#{message.message}",message)
 		end
 		def reset(message)
 			state_monitor.reset_state

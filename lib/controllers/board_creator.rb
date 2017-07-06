@@ -8,11 +8,11 @@ module ChimaChess
       pieced_board = place_pieces(board: board, config: config)
 
     end
-    def create_board
+    def self.create_board
       ChimaChess::ChessBoard.new
 
     end
-    def place_pieces(board:, config:)
+    def self.place_pieces(board:, config:)
       ChimaChess::PlaceChessPieces.new.place_chess_pieces(config: config, board: board)
 
     end

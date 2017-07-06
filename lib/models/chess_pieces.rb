@@ -149,7 +149,7 @@ module ChimaChess
 		end
 
 		def reduce_advance
-			@move_directions = @move_directions[0]
+			@move_directions = [@move_directions[0]]
 		end
 
 		def update_tiles_attacked (point, board)

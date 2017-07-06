@@ -1,4 +1,7 @@
 module ChimaChess
+	require './lib/controllers/chess_state_controller.rb'
+	require './lib/models/session_manager.rb'
+
 	class ChessSessionController
 		attr_accessor :session_manager, :state_controller
 		attr_reader  :application
@@ -46,7 +49,7 @@ module ChimaChess
 
 		end
 		def create_state_controller(session)
-			state_controller = ChimaChess::ChessStateController.new(session)
+			@state_controller = ChimaChess::ChessStateController.new(session)
 
 		end
 

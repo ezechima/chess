@@ -29,8 +29,8 @@ module ChimaChess
 			@rank = rank
 			@file = file
 			@move_class = :regular_move
-
 		end
+	end
 
 
 	class MalformExprProcessor
@@ -91,7 +91,7 @@ module ChimaChess
 			castle_side = directive[2] ? :queen_side : :king_side
 			create_message(castle_side)
 		end
-		def create_message(castle_side)
+		def self.create_message(castle_side)
 			ChimaChess::CastleMessageObject.new(castle_side: castle_side)
 
 		end
@@ -115,8 +115,8 @@ module ChimaChess
 			source_file = directive [2]
 			create_message(piece_type,destination,source_rank,source_file)
 		end
-		def create_message(piece_type,destination,source_rank,source_file)
-			ChimaChess::MoveMessageObject.new (
+		def self.create_message(piece_type,destination,source_rank,source_file)
+			ChimaChess::MoveMessageObject.new(
 				piece_type: piece_type,
 				destination: destination,
 				rank: source_rank,
@@ -130,6 +130,5 @@ module ChimaChess
 		def self.process_input(string)
 			ChimaChess::MoveExprProcessor.match(string)
 		end
-
 	end
 end

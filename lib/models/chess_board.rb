@@ -56,7 +56,7 @@ module ChimaChess
 		end
 
 		def switch_player
-			turn_to_play = (turn_to_play == :white ? :black : :white)
+			@turn_to_play = (@turn_to_play == :white ? :black : :white)
 		end
 
 		def set_enpassant_tile(tile_str)
