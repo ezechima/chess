@@ -7,6 +7,7 @@ load 'lib/controllers/find_piece.rb'
 load 'lib/controllers/attack_check.rb'
 load 'lib/controllers/chess_input_controllers.rb'
 load 'lib/controllers/castle_check.rb'
+load 'lib/views/render_board.rb'
 
 @my_board = ChimaChess::ChessBoard.new
 @my_tile = @my_board.tile('d5')
@@ -84,3 +85,6 @@ puts 'Testing Input Controller'
 	puts ChimaChess::ChessTextProcessor.process_input("0-0").inspect
 	puts ChimaChess::ChessTextProcessor.process_input("O-O-O").inspect
 	puts ChimaChess::ChessTextProcessor.process_input("O-O").inspect
+	puts
+puts "Rendering Board"
+	ChimaChess::RenderBoard.render_board(board: @my_board2)
