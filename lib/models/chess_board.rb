@@ -30,7 +30,7 @@ module ChimaChess
 
 		def king_loc(color)
 			each_piece do |piece,point|
-				return point.to_s  if piece.piece_type == :King && piece.color == color
+				return point.to_chess_notation  if piece.piece_type == :King && piece.color == color
 			end
 		end
 
