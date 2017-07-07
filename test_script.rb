@@ -88,3 +88,7 @@ puts 'Testing Input Controller'
 	puts
 puts "Rendering Board"
 	ChimaChess::RenderBoard.render(board: @my_board2)
+
+puts "Knowing king Location"
+	puts @my_board2.king_loc(:black)
+	puts @my_board2.king_loc(:white)
