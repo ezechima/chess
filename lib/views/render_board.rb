@@ -28,7 +28,7 @@ module ChimaChess
 		end
 	end
 	class RenderBoard
-	  def self.render_board (board:,**params)
+	  def self.render(board:,**params)
 	    view_params = initialize_border_params(params)
 	    render_file_headings(view_params)
 	    8.downto(1) do |rank|
@@ -38,7 +38,7 @@ module ChimaChess
 	    true
 	  end
 
-	  def self.initialize_border_params(params)
+	  def self.initialize_border_params(params={})
 			tile_width = params[:tile_width] || 5
 			tile_height = params[:tile_height] || 3
 	    view_params = {}

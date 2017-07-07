@@ -64,7 +64,7 @@ module ChimaChess
 			begin
 				ChimaChess::CastleMoveChecker.check(board: board, rook_position: var_rook_position, king_position: var_king_position)
 				ChimaChess::CastleLOSChecker.check(board: board, castle_move_range: var_castle_move_range)
-				ChimaChess::AttackCheck.check(board: board,tiles: get_king_move_range,color: color)
+				ChimaChess::AttackCheck.check(board: board,tiles: var_king_move_range,color: color)
 			rescue ChimaChess::ChessGameException => exc
 
 				raise ChimaChess::ChessGameException.new("Cannot Castle: #{exc.message}")

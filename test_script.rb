@@ -87,4 +87,4 @@ puts 'Testing Input Controller'
 	puts ChimaChess::ChessTextProcessor.process_input("O-O").inspect
 	puts
 puts "Rendering Board"
-	ChimaChess::RenderBoard.render_board(board: @my_board2)
+	ChimaChess::RenderBoard.render(board: @my_board2)
