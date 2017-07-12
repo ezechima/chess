@@ -4,6 +4,8 @@ module ChimaChess
   require './lib/views/render_board.rb'
   require './lib/views/render_player.rb'
   require './lib/views/render_status.rb'
+  require './lib/views/load_save_dialog.rb'
+
 
   class AppViewController
     attr_accessor :application, :players
@@ -22,6 +24,14 @@ module ChimaChess
 
 
     end
+    def render_load_dialog
+      ChimaChess::LoadDialog.render(io_manager: application.session_IO)
+    end
+
+    def render_save_dialog
+      ChimaChess::SaveDialog.render(io_manager: application.session_IO)
+    end
+
     def render_initial_dialog
       ChimaChess::InitialDialog.render
     end
