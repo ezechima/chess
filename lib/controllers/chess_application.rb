@@ -21,7 +21,7 @@ module ChimaChess
     end
 
     def session_IO
-      ChimaChess::SessionFileIO
+      ChimaChess::SessionDBIO
     end
 
     def start

@@ -46,7 +46,6 @@ module ChimaChess
 
 		def save_session
 			reference = application.app_view_controller.render_save_dialog
-			application.current_status = session_manager.active_session.class.to_s#YAML::dump(session_manager.active_session)
 			session_manager.save_session(reference)
 		end
 
