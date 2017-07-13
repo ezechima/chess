@@ -28,8 +28,8 @@ module ChimaChess
       app_view_controller.start
     end
 
-    def process_dialog(dialog_type:)
-      app_view_controller.process_dialog(dialog_type)
+    def process_dialog(dialog_type:, params: nil)
+      app_view_controller.process_dialog(dialog_type: dialog_type, params: params)
     end
 
     def reset_current_status

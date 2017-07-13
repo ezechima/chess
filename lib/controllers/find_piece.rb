@@ -84,7 +84,7 @@ module ChimaChess
 			type_list = ChimaChess::PieceTypePicker.pick_piece(colored_list,type)
 			destination_list = ChimaChess::DestinationPicker.pick_destination(type_list,destination_str)
 			found_hash = ChimaChess::FileRankPicker.pick(destination_list: destination_list, **file_rank)
-			process_not_specific_request(found_hash,destination_str,board) if found_hash.length > 1
+			found_hash = process_not_specific_request(found_hash,destination_str,board) if found_hash.length > 1
 			return found_hash
 		end
 
@@ -98,8 +98,11 @@ module ChimaChess
 		end
 
 		def self.process_not_specific_request(found_hash,destination_str,board)
-			message = "#{found_hash.keys.join(" & ")} can move to #{destination_str}, please specify a file or rank"
-			raise ChimaChess::ChessGameException.new(message)
+			piece_key = board.params[:application].process_dialog(dialog_type: :specify_move_dialog,params: found_hash.keys)
+			hash = found_hash.select{|key,value| key == piece_key}
+
+			#message = "#{found_hash.keys.join(" & ")} can move to #{destination_str}, please specify a file or rank"
+			#raise ChimaChess::ChessGameException.new(message)
 		end
 	end
 end
