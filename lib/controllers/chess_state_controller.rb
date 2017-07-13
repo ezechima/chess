@@ -1,5 +1,6 @@
 module ChimaChess
 	require './lib/controllers/move_controller.rb'
+	require './lib/controllers/attack_check.rb'
 	class ChessStateController
 		attr_accessor :state_monitor
 		def initialize(state_monitor)
@@ -9,21 +10,25 @@ module ChimaChess
 		def process(message)
 			send("#{message.message}",message)
 		end
+
 		def reset(message)
 			state_monitor.reset_state
 		end
+
 		def undo(message)
 			state_monitor.previous_state
 
 		end
+
 		def redo(message)
 			state_monitor.next_state
 
 		end
+
 		def commit(state)
 			state_monitor.add_state(state)
-
 		end
+
 		def current_state
 			state_monitor.current_state
 
@@ -32,10 +37,20 @@ module ChimaChess
 			new_state = process_move(message: message, state: current_state)
 			new_state.switch_player
 			commit(new_state)
+			check_king(new_state)
 		end
+
 		def process_move(message:, state:)
 			ChimaChess::MoveController.process(message: message, state: state)
+		end
 
+		def check_king(state)
+			begin
+				ChimaChess::KingChecker.check(state)
+			rescue ChimaChess::ChessGameException => e
+				message = "Check! #{state.turn_to_play} #{e.message}"
+				raise ChimaChess::ChessGameException.new(message)
+			end
 		end
 	end
 end
