@@ -8,9 +8,7 @@ module ChimaChess
 			@white_active_pieces = {}
 		end
 
-
 		def update_active_pieces(board)
-
 			board.each_piece do |piece|
 				send("update_#{piece.color.to_s.downcase}_pieces",piece)
 			end
@@ -22,10 +20,7 @@ module ChimaChess
 
 		def update_white_pieces (piece)
 			white_active_pieces[piece.name]=piece
-
 		end
-
-
 	end
 
 	class AttackObject
@@ -36,14 +31,13 @@ module ChimaChess
 			@attacker_type = attacker_type
 			@attacker_location = attacker_location
 			@attacker_color = attacker_color
-
 		end
+
 		def include?(str)
 			list_of_tiles.include?(str.to_s)
 		end
-
-
 	end
+
 	class AttackList
 		attr_accessor :tiles_attacked_by_black, :tiles_attacked_by_white
 		def initialize
@@ -67,10 +61,10 @@ module ChimaChess
 			end
 			simplified_list
 		end
+
 		def tiles_attacked
 			tiles_attacked_by_white.merge(tiles_attacked_by_black)
 		end
-
 
 		private
 
@@ -96,8 +90,6 @@ module ChimaChess
 				attacker_location: attacker_location,
 				attacker_color: attacker_color
 				)
-
-
 		end
 	end
 end
