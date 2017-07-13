@@ -99,7 +99,7 @@ module ChimaChess
 		end
 		def self.process_not_specific_request(found_hash,destination_str,board)
 
-			message = "#{found_hash.keys} can move to #{destination_str}, please specify a file or rank"
+			message = "#{found_hash.keys.join(" & ")} can move to #{destination_str}, please specify a file or rank"
 			raise ChimaChess::ChessGameException.new(message)
 		end
 
