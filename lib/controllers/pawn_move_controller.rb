@@ -1,6 +1,7 @@
 module ChimaChess
   require './lib/controllers/move_controller.rb'
   require './lib/controllers/find_piece.rb'
+  require './lib/controllers/piece_creator.rb'
   class PawnMoveController
 
     def self.process(message,state)
@@ -30,14 +31,21 @@ module ChimaChess
     def self.should_promote?(location,state)
       (location[1] == "1" || location[1] == "8") && state.piece(location).piece_type == :Pawn
     end
-    def promote_piece(location,state)
-      piece_type_to_promote_to = state.params[:application].process_dialog(dialog_type: :promotion_dialog, state: state)
-      new_piece = create_piece(piece_type_to_promote_to)
+    def self.promote_piece(location,state)
+      piece_type_to_promote_to = state.params[:application].process_dialog(dialog_type: :promote_dialog)
+      new_piece = create_piece(piece_type_to_promote_to,state.turn_to_play,location)
       set_piece(new_piece,location,state)
     end
-    def set_piece(piece,location,state)
+
+    def self.set_piece(piece,location,state)
         ChimaChess::PieceMover.set_piece(piece,location,state)
     end
+
+    def self.create_piece(piece_type, color, location)
+      ChimaChess::PieceCreator.create_piece(piece_type: piece_type,color: color, first_location: location)
+
+    end
+
     def self.reduce_advance(src,state)
       state.piece(src).reduce_advance
     end

@@ -5,6 +5,7 @@ module ChimaChess
   require './lib/views/render_player.rb'
   require './lib/views/render_status.rb'
   require './lib/views/load_save_dialog.rb'
+  require './lib/views/promote_dialog.rb'
 
 
   class AppViewController
@@ -23,6 +24,14 @@ module ChimaChess
       end
 
 
+    end
+
+    def process_dialog(dialog_type)
+      send("render_#{dialog_type}")
+    end
+
+    def render_promote_dialog
+      ChimaChess::PromoteDialog.render
     end
     def render_load_dialog
       ChimaChess::LoadDialog.render(io_manager: application.session_IO)
