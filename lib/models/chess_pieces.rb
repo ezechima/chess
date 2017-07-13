@@ -2,11 +2,8 @@ module ChimaChess
 	require './lib/helpers/point.rb'
 	class ChessPiece
 
-
-
 		attr_reader :color, :first_location, :location, :attack_directions, :move_directions, :deg_of_freedom, :name, :piece_type
  		attr_accessor :has_moved
-
 
 		#sets the color and current tile for the chess piece
 		def initialize (color:, first_location:)
@@ -37,7 +34,6 @@ module ChimaChess
 				attacked_tiles.push(tile.to_s) if ( enemy_position?(tile) && (freedom > 0))
 			end
 			attacked_tiles
-
 		end
 
 		def name
@@ -58,19 +54,11 @@ module ChimaChess
 
 		def has_moved?
 			has_moved
-
 		end
-
-
 
 		def to_s
 			"#{@color} #{piece_type}"
 		end
-
-
-
-
-
 	end
 
 	class Queen < ChessPiece
@@ -81,12 +69,11 @@ module ChimaChess
 			@attack_directions = [NORTH, WEST, EAST, SOUTH,NORTH + EAST, NORTH + WEST, SOUTH+EAST, SOUTH+ WEST]
 			@move_directions = @attack_directions
 		end
-
-
 	end
 
 	class King < ChessPiece
 		attr_accessor :has_moved
+
 		def initialize (color:, first_location:)
 			@piece_type = :King
 			super
@@ -94,34 +81,31 @@ module ChimaChess
 			@attack_directions = [NORTH, WEST, EAST, SOUTH,NORTH + EAST, NORTH + WEST, SOUTH+EAST, SOUTH+ WEST]
 			@move_directions = @attack_directions
 		end
-
-
 	end
 
 	class Rook < ChessPiece
 		attr_accessor :has_moved
+
 		def initialize (color:, first_location:)
 			@piece_type = :Rook
 			super
 			@attack_directions = [NORTH, WEST, EAST, SOUTH]
 			@move_directions = @attack_directions
 		end
-
-
 	end
 
-
-
 	class Bishop < ChessPiece
+
 		def initialize (color:, first_location:)
 			@piece_type = :Bishop
 			super
 			@attack_directions = [NORTH + EAST, NORTH + WEST, SOUTH+EAST, SOUTH+ WEST]
 			@move_directions = @attack_directions
 		end
-
 	end
+
 	class Knight < ChessPiece
+
 		def initialize (color:, first_location:)
 			@piece_type = :Knight
 			super
@@ -133,9 +117,8 @@ module ChimaChess
 			end
 			@move_directions = @attack_directions
 		end
-
-
 	end
+
 	class Pawn < ChessPiece
 		attr_accessor :has_moved
 
@@ -150,7 +133,6 @@ module ChimaChess
 				@attack_directions = [SOUTH + EAST, SOUTH + WEST]
 				@move_directions = [SOUTH,SOUTH + SOUTH]
 			end
-
 		end
 
 		def reduce_advance
