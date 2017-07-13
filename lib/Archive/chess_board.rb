@@ -23,15 +23,18 @@ include Render_Chess_Board
 		@killed_pieces_by_color = {'white' => @white_killed_pieces, 'black' => @black_killed_pieces}
 		@board = Array.new(8) { Array.new(8) {Chess_Tile.new(self)}}
 		initialize_tiles  #update tile locations
-		
+
 		place_pieces		#its the board's responsibility to ensure pieces are properly placed
 		update_all_attack_tiles
-		
+
 
 		@black_king = piece('e8')
 		@white_king = piece('e1')
 		#Castle variables is used to store a hash of kings and rooks
-		@castle_variables = {'white' => {'king' => @white_king,'rook_west' => piece('a1'),'rook_east' => piece('h1'),'under_attack_by' =>@black_attack_tiles} , 'black' => {'king' => @black_king,'rook_west' => piece('a8'),'rook_east' => piece('h8'), 'under_attack_by' => @white_attack_tiles}}
+		@castle_variables = {'white' => {'king' => @white_king,'rook_west' => piece('a1'),
+			'rook_east' => piece('h1'),'under_attack_by' =>@black_attack_tiles} ,
+			'black' => {'king' => @black_king,'rook_west' => piece('a8'),
+			'rook_east' => piece('h8'), 'under_attack_by' => @white_attack_tiles}}
 
 		true
 	end
@@ -44,21 +47,21 @@ include Render_Chess_Board
 		end
 		true
 
-		
+
 	end
 	#the game always has information about which piece is attacking where
 	#after every move, this method should be called to refresh
 	def update_all_attack_tiles
 		@white_attack_tiles =update_attack_tiles(@white_pieces_active)
 		@black_attack_tiles = update_attack_tiles(@black_pieces_active)
-		
+
 	end
 
 	def place_pieces
 		piece_positions = [	[["2","7"],('a'..'h'),'Pawn'],
 							[["1","8"],["a","h"],'Rook'],
 						 	[["1","8"],["b","g"],'Knight'],
-						 	[["1","8"],["c","f"],'Bishop'],	
+						 	[["1","8"],["c","f"],'Bishop'],
 						 	[["1","8"],["d"],'Queen'],
 						 	[["1","8"],["e"],'King']
 						 ]
@@ -87,20 +90,20 @@ include Render_Chess_Board
 	end
 	def update_attack_tiles (pieces_active)
 		attack_tiles = {}
-		
+
 		pieces_active.each do |piece|
 			piece_attack_tiles = piece.update_attackTiles
 			piece_attack_tiles.each do |tile|
 				attack_tiles[tile.to_s] =piece  #remooved .to_s
 			end
 
-		
+
 		end
 		attack_tiles
 
-		
+
 	end
-	#checks if 
+	#checks if
 	#and finding out if the king is still under check
 	def checkmate? (piece_color)
 		temp_board = Marshal.load(Marshal.dump(self))
@@ -123,7 +126,7 @@ include Render_Chess_Board
 
 
 	def move(piece_color,piece_class,destination,rank=nil, file=nil)
-		
+
 		#find the piece that fits this move
 		found_piece = find_piece(piece_color,piece_class,destination,rank,file)
 		found_piece_location=found_piece.get_location
@@ -135,7 +138,7 @@ include Render_Chess_Board
 		if  response == true #{:move=> true, :message =>"King is under attack by"}
 			move = move_piece(piece_color,found_piece_location,destination)
 			return move
-		
+
 		end
 	end
 
@@ -149,12 +152,12 @@ include Render_Chess_Board
 		destination_tile = tile(destination)
 		source_tile.clear
 		destination_tile.piece = piece
-		
+
 		piece.has_moved = true
 		update_all_attack_tiles
 		piece_color.downcase == 'white' ? king_check?(@white_king,@black_attack_tiles) : king_check?(@black_king,@white_attack_tiles)
 		true
-		
+
 	end
 	#checks if the king's position is under attack
 	#It can also be used to check if a position is under attack by an opposing piece
@@ -170,7 +173,7 @@ include Render_Chess_Board
 		else
 			raise "#{king} is under attack by #{temp}"
 		end
-		
+
 	end
 	#method to call castle, color is a string of the piece and rook_side is a string telling which rook is moving  could either be rook_east or rook_west
 	def castle(color,rook_side)
@@ -186,7 +189,7 @@ include Render_Chess_Board
 		check_king_path(king_tile, direction,danger_tiles)
 		move_piece(color,king_tile.to_s,king_tile.neighbor(direction*2)	.to_s)					#move king to the side of the rook
 		move_piece(color,rook.getTile.to_s,rook_destination_tile.to_s)				#move_rook_to the side of the king
-		
+
 
 
 	end
@@ -204,16 +207,16 @@ include Render_Chess_Board
 			raise "#{rook} has moved already and cannot castle"
 		end
 		false
-		
+
 	end
 	#used in castling to check if the path taken by the king is under check
 	def check_king_path(king_tile,direction,danger_tiles)
-		
+
 		0.upto(2) do |num|
 			king_check?(king_tile.neighbor(direction * num).to_s,danger_tiles)
 		end
 
-		
+
 	end
 	def check_rook_path (rook,rook_destination_tile)
 		if rook.moveTiles_list.include?(rook_destination_tile.to_s) && rook_destination_tile.is_empty?
@@ -221,7 +224,7 @@ include Render_Chess_Board
 		else
 			raise "Path between #{rook} and King is not clear"
 		end
-		
+
 	end
 	def kill_piece(piece)
 		index=active_pieces.find_index(piece)
@@ -234,7 +237,7 @@ include Render_Chess_Board
 		killed_pieces_by_color[piece_color] << piece
 
 		piece.setTile(nil)
-				
+
 
 
 	end
@@ -252,18 +255,18 @@ include Render_Chess_Board
 			promoted_piece.setTile(tile)
 			@active_pieces_by_color[promoted_piece.color.downcase] << promoted_piece
 			tile.piece = promoted_piece
-			
-			
+
+
 		end
 
 	end
 
-	
+
 	def find_piece(piece_color,piece_class,destination,rank,file) # (string,class,string location,string rank, string file)
 		piece_found = false
 		temp_piece = nil
-		
-		search_array = active_pieces_by_color[piece_color.downcase] 
+
+		search_array = active_pieces_by_color[piece_color.downcase]
 		search_array.each do |search_piece|
 			if search_piece.instance_of?(piece_class)
 				piece_found=true
@@ -283,7 +286,7 @@ include Render_Chess_Board
 			raise "#{piece} not in play"
 		end
 		false
-		
+
 	end
 
 
@@ -305,7 +308,7 @@ include Render_Chess_Board
 
 	#method to return a chess tile given a location
 	def tile(location)
-		
+
 		location = to_point(location)
 		if (0..7) === location.x && (0..7) === location.y
 			return @board[location.y][location.x]
