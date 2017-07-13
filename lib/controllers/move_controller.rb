@@ -5,8 +5,8 @@ require './lib/controllers/castle_check.rb'
   class PieceMover
     def self.move_piece(src,destination,board)
       piece = board.tile(src).piece
-      set_piece(piece,destination,board)
       clear(src,board)
+      set_piece(piece,destination,board)
     end
     def self.set_piece(piece,destination,board)
       clear(destination,board)

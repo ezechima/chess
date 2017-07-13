@@ -86,7 +86,7 @@ module ChimaChess
 			type_list = ChimaChess::PieceTypePicker.pick_piece(colored_list,type)
 			destination_list = ChimaChess::DestinationPicker.pick_destination(type_list,destination_str)
 			found_hash = ChimaChess::FileRankPicker.pick(destination_list: destination_list, **file_rank)
-			raise exception if found_hash.length > 1
+			process_not_specific_request(found_hash,destination_str,board) if found_hash.length > 1
 			return found_hash
 
 		end
@@ -96,6 +96,11 @@ module ChimaChess
 		end
 		def self.create_attack_model(board)
 			attack_list = ChimaChess::AttackModelCreator.create(board)
+		end
+		def self.process_not_specific_request(found_hash,destination_str,board)
+
+			message = "#{found_hash.keys} can move to #{destination_str}, please specify a file or rank"
+			raise ChimaChess::ChessGameException.new(message)
 		end
 
 	end

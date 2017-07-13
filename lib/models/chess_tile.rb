@@ -2,19 +2,19 @@ module ChimaChess
 
 
 	class ChessTile
-		
+
 		attr_accessor   :piece
 		attr_reader   	:location
 
 		def initialize (point=nil)
 			@location = point
 
-						
+
 		end
 
 		def is_empty?
 			@piece.nil?
-			
+
 		end
 
 		def to_s
@@ -23,7 +23,7 @@ module ChimaChess
 		def clear_piece
 			@piece && @piece.set_location("")
 			@piece = nil
-			
+
 		end
 
 		def piece=(piece)
@@ -31,7 +31,7 @@ module ChimaChess
 			@piece = piece
 		end
 
-		
+
 
 
 

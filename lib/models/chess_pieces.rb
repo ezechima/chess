@@ -11,8 +11,9 @@ module ChimaChess
 		#sets the color and current tile for the chess piece
 		def initialize (color:, first_location:)
 			@first_location = first_location
+			@location = first_location
 			@color = color		#white or black chess piece
-			@name = "#{@color} #{piece_type} #{first_location}"
+			@name = "#{@color} #{piece_type} #{@location}"
 			@deg_of_freedom = 16  #maximum number of steps pieces can move in each direction,
 														#it is one for pawns, kings and Knights
 			@has_moved = false
@@ -37,6 +38,10 @@ module ChimaChess
 			end
 			attacked_tiles
 
+		end
+
+		def name
+			@name = "#{@color} #{piece_type} #{@location}"
 		end
 
 		def enemy? (piece)
