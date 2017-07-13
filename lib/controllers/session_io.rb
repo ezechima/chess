@@ -51,10 +51,15 @@ module ChimaChess
     end
 
     def self.execute_insert(db,data,reference)
-      stmt = db.prepare("INSERT INTO GAMES VALUES(?,?)")
-      stmt.bind_params(reference,data)
-      stmt.execute
-      stmt.close
+      begin
+        stmt = db.prepare("INSERT INTO GAMES VALUES(?,?)")
+        stmt.bind_params(reference,data)
+        stmt.execute
+      rescue Exception => e
+        raise e
+      ensure
+        stmt.close
+      end
     end
 
     def self.execute_update(db,data,reference)
