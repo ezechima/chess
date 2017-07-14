@@ -37,20 +37,15 @@ module ChimaChess
 			new_state = process_move(message: message, state: current_state)
 			new_state.switch_player
 			commit(new_state)
-			check_king(new_state)
+			check_checkmate(new_state)
 		end
 
 		def process_move(message:, state:)
 			ChimaChess::MoveController.process(message: message, state: state)
 		end
 
-		def check_king(state)
-			begin
-				ChimaChess::KingChecker.check(state)
-			rescue ChimaChess::ChessGameException => e
-				message = "Check! #{state.turn_to_play} #{e.message}"
-				raise ChimaChess::ChessGameException.new(message)
-			end
+		def check_checkmate(state)
+			ChimaChess::KingChecker.checkmate?(state)
 		end
 	end
 end
