@@ -18,10 +18,15 @@ module ChimaChess
 
     def start
       render_initial_dialog
-      while (true) do
-        get_input()
-        clear_screen
-        render_application
+      while (true)
+        application.continue = true
+
+        while (application.continue) do
+          get_input()
+          clear_screen
+          render_application
+        end
+        render_continue_dialog
       end
     end
 
@@ -47,6 +52,11 @@ module ChimaChess
 
     def render_initial_dialog(params = nil)
       ChimaChess::InitialDialog.render
+    end
+
+    def render_continue_dialog
+      ChimaChess::ContinueDialog.render
+
     end
 
     def get_input(context=nil)

@@ -5,7 +5,7 @@ module ChimaChess
   require './lib/controllers/session_io.rb'
   class ChessApplication
     attr_reader :session_controller, :app_view_controller
-    attr_accessor :current_status
+    attr_accessor :current_status, :continue
 
     def initialize
         @session_controller = create_session_controller
@@ -44,6 +44,9 @@ module ChimaChess
       reset_current_status
       begin
         send("execute_#{message.class.to_s.downcase}",message)
+      rescue ChimaChess::ChessCheckMateException => e
+        @continue = false
+        update_current_status(e.message)
       rescue ChimaChess::ChessGameException => e
         update_current_status(e.message)
       end

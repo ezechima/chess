@@ -7,4 +7,10 @@ module ChimaChess
       puts "Exit: Gerrout"
     end
   end
+  class ContinueDialog
+    def self.render
+      puts "What will you like to do next?"
+      puts "New, Load or Exit"
+    end
+  end
 end
