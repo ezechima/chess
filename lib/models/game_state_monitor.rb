@@ -75,7 +75,6 @@ module ChimaChess
 
 		def create_working_object (object)
 			ChimaChess::ObjectDuplicator.duplicate(object)
-
 		end
 
 

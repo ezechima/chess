@@ -82,10 +82,16 @@ module ChimaChess
   end
 
   class AttackModelCreator
+    @@call_count =0
     def self.create(board)
+      write_count()
       attack_list = ChimaChess::AttackList.new
       attack_list.update_attacked_tiles(board)
       attack_list
+    end
+    def self.write_count
+      @@call_count +=1
+      File.open("chess_log","w") {|file| file.puts(@@call_count)}
     end
   end
   class AttackCheck
